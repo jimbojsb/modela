@@ -29,7 +29,16 @@ class Modela_Mapper_Db
 		if (!is_array($params) && $params !== null) {
 			$params = array($params);
 		}
+		$stmt = $adapter->query($sql, $params);
 		
-		return $adapter->fetchAll($sql, $params);
+		if ($stmt->rowCount() == 0) {
+			return null;
+		} else {
+			$res = $stmt->fetchAll();
+			if (count($res) == 0 && $stmt->rowCount() == -1) {
+				return true;
+			}
+			return $res;
+		}
 	}
 }

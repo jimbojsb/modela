@@ -25,9 +25,11 @@ abstract class Modela_Object
 		} else {
 			$classSuffix = get_class($this);
 			$classSuffix = ucfirst(str_replace('Model_', '', $classSuffix));
+			
 			//@todo make this autoload
 			//temporary, related to github issue #1
 			require_once (APPLICATION_PATH . "/models/mappers/{$classSuffix}Mapper.php");
+			
 			$this->_mapper_class = "Mapper_$classSuffix";
 			$this->_mapper = new $this->_mapper_class();
 		}
@@ -40,8 +42,10 @@ abstract class Modela_Object
 		$methodstring = "get$property";
 		if (method_exists($this, $methodstring)) {
 			return call_user_func(array($this, $methodstring));
+		} else if (isset($this->_storage[$property])) {
+			return $this->_storage[$property];
 		}
-		return $this->_storage[$property];
+		return null;
 	}
 	
 	public function __set($property, $value)
