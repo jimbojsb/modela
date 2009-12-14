@@ -2,8 +2,14 @@
 abstract class Modela_Object
 {
 	protected $_storage = array();
+	
+	/**
+	 * 
+	 * @var Modela_Mapper
+	 */
 	protected $_mapper;
 	protected $_table;
+	protected $_mapper_class;
 	
 	public function __construct($properties = null)
 	{
@@ -14,33 +20,40 @@ abstract class Modela_Object
 		}
 
 		if (isset($this->_mapper_class)) {
-			
+
 		} else if (false) {
-			
 		} else {
-			$this->_mapper = new Modela_Mapper();
+			$classSuffix = get_class($this);
+			$classSuffix = ucfirst(str_replace('Model_', '', $classSuffix));
+			//@todo make this autoload
+			//temporary, related to github issue #1
+			require_once (APPLICATION_PATH . "/models/mappers/{$classSuffix}Mapper.php");
+			$this->_mapper_class = "Mapper_$classSuffix";
+			$this->_mapper = new $this->_mapper_class();
 		}
-		
 		
 		return $this;
 	}
 	
-	public function save()
-	{
-		if (!$this->_table) {
-			throw new Exception();
-		}
-		
-		$this->_mapper->save($this->_table, $this->_storage);
-	}
-	
 	public function __get($property)
 	{
+		$methodstring = "get$property";
+		if (method_exists($this, $methodstring)) {
+			return call_user_func(array($this, $methodstring));
+		}
 		return $this->_storage[$property];
 	}
 	
 	public function __set($property, $value)
 	{
 		$this->_storage[$property] = $value;
+	}
+	
+	public function __call($function, $args)
+	{
+		if (!method_exists($this, $function) || substr($function, 0, 2) === '__') {
+			$args[] = $this;
+			call_user_func_array(array($this->_mapper, $function), $args);
+		}
 	}
 }
