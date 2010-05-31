@@ -13,7 +13,7 @@ class Modela_Loader
     
     public function __construct()
     {
-        
+        spl_autoload_register(array($this, 'loadClass'));
     }
     
     public function loadClass($className)
