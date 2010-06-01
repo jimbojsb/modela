@@ -6,6 +6,18 @@ class Modela_Collection implements IteratorAggregate
     protected static $_sortProperty;
     protected static $_sortBackward;
     
+    public function __construct(Array $data = null)
+    {
+        if ($data !== null) {
+            $this->setData($data);
+        }
+    }
+    
+    public function setData($data)
+    {
+        $this->_storage = $data;
+    }
+    
     public function getIterator()
     {
         return new ArrayIterator($this->_storage);

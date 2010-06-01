@@ -13,7 +13,7 @@ class Modela_Config
             $params->username = $parts["user"];
             $params->password = $parts["pass"];
             $params->host = $parts["host"];
-            $params->database = $parts["path"];
+            $params->database = substr($parts["path"], 1);
             return $params;
         }
         return false;

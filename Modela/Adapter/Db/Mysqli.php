@@ -5,30 +5,25 @@ class Modela_Adapter_Db_Mysqli implements Modela_Adapter_Db_Interface
     
     public function __construct(stdClass $params)
     {
-        $this->_conn = new mysqli($params->host, $params->username, $params->password, $params->databse);    
+        $this->_conn = new mysqli($params->host, $params->username, $params->password, $params->database);    
     }
     
-    public function query($query)
+    public function query($query, $params)
     {
-        
+        return $this->_conn->query($query);
     }
     
-    public function fetchOne()
+	public function fetchAll($query, $params)
     {
-        
-    }
-    
-	public function fetchAll ()
-    {
-        
+        $results = $this->query($query, $params);
+        $return = array();
+        while ($result = $results->fetch_assoc()) {
+            $return[] = $result;   
+        }
+        return $return;
     }
 
-	public function fetchRow ()
-    {
-        
-    }
-
-	public function getConnection ()
+	public function getConnection()
     {
         
     }
