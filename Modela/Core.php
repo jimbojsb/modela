@@ -1,60 +1,30 @@
 <?php
 class Modela_Core
 {
-    protected static $_config;
-    protected static $_dbAdapter;
-    protected static $_cacheAdapter;
-    protected static $_isInitialized;
-    protected static $_debugMode;
+    const MODELA_FOLDER_COLLECTIONS = 'collections';
+    const MODELA_FOLDER_OBJECTS = 'objects';
     
-    public static function init(Modela_Config $config)
+    protected static $_adap;
+    protected static $_modelPath;
+    
+    public static function init($adapter)
     {
-        self::$_config = $config;    
-        
-        if (self::$_config->dbConnectionString) {
-            self::initDbAdapter();
-        }
-        
-        if (self::$_config->debug) {
-            self::debugMode(true);
-        }
-        
-        self::$_isInitialized = true; 
+        self::$_adap = $adapter;
+    }
+    
+    public static function setModelPath($path)
+    {
+        self::$modelPath = $path;
+    }
+    
+    public static function loadModels($lazy = true)
+    {
+        $path = self::$_modelPath;
     }
     
     public static function reset()
     {
-        self::$_options = null;
-        self::$_dbAdapter = null;
-        self::$_cacheAdapter = null;
-        self::$_isInitialized = false;
-    }
-    
-    public static function debugMode($enableDebug)
-    {
-        self::$_debugMode = $enableDebug;
-        return self::$_debugMode;    
-    }
-    
-    /**
-     * @return Modela_Adapter_Db_Interface
-     */
-    public static function getDbAdapter()
-    {
-        return self::$_dbAdapter;
-    }
-    
-    protected static function initDbAdapter()
-    {
-        $config = self::$_config;
-        $dbParams = $config->getDbConnectionParams();
-        $dbAdapterClass = "Modela_Adapter_Db_" . $dbParams->adapterType;
-        $adapter = new $dbAdapterClass($dbParams);
-        self::$_dbAdapter = $adapter;
-    }
-    
-    protected static function initCacheAdapter($adapterOptions)
-    {
-        
+        self::$_adap = null;
+        self::$_modelPath = null;
     }
 }

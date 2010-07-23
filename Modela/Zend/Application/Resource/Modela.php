@@ -1,8 +1,5 @@
 <?php
-class Modela_Zend_Application_Resource_Modela extends Zend_Application_Resource_ResourceAbstract
+class Zend_Application_Resource_Modela
 {
-    public function init()
-    {
-        
-    }
+    
 }
