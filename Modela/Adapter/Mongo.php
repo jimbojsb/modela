@@ -18,6 +18,24 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
         return $this->_conn;
     }
     
+    public function getDb()
+    {
+        return $this->_db;
+    }
+    
+    public function save(Modela_Doc $doc)
+    {
+        $collectionName = strtolower($doc->getCollection());
+        $collection = $this->_db->$collectionName;
+        $data = $doc->asArray();
+        $collection->save($data);   
+    }
+    
+    public function delete(Modela_Doc $doc)
+    {
+        
+    }
+    
     public function setDb($dbName)
     {
         $this->_db = $dbName;

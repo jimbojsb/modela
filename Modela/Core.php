@@ -35,7 +35,7 @@ class Modela_Core
         $this->_options = $options;
         $adapterOptions = $options["adapter"];
         if ($adapterOptions["type"] && $adapterOptions["host"] &&  $adapterOptions["db"]) {
-            $this->_getAdapter($options["adapter"]);
+            $this->_initAdapter($options["adapter"]);
         }
     }
       
@@ -51,19 +51,26 @@ class Modela_Core
         $this->_objects = array_unique($this->_objects);
     }
     
-    protected function _getAdapter($options)
+    /**
+     * @return Modela_Adapter_Interface
+     */
+    public function getAdapter()
+    {
+        return $this->_adapter;
+    }
+    
+    protected function _initAdapter($options)
     {
         $type = $options["type"];
         if ($type) {
             $adapterClassName = "Modela_Adapter_" . ucfirst((strtolower($type)));  
             try {
-                $adapter = new $adapterClassName($options);
-                return $adapter;
+                $this->_adapter = new $adapterClassName($options);
             } catch (Modela_Exception $e) {
-                return null;
+                return;
             }         
         } 
-        return null;
+        return;
     }
     
     public static function reset()
