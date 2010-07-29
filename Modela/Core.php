@@ -1,30 +1,78 @@
 <?php
 class Modela_Core
 {
-    const MODELA_FOLDER_COLLECTIONS = 'collections';
-    const MODELA_FOLDER_OBJECTS = 'objects';
+
     
-    protected static $_adap;
-    protected static $_modelPath;
+    protected static $_instance;
     
-    public static function init($adapter)
+    protected $_adapter;
+    protected $_options;
+    protected $_objects;
+    protected $_collections;
+    
+    /**
+     * 
+     * @param array $options
+     * @return Modela_Core
+     */
+    public static function getInstance()
     {
-        self::$_adap = $adapter;
+        if (self::$_instance instanceof Modela_Core) {
+            return self::$_instance;
+        } else {
+            self::$_instance = new Modela_Core();
+            return self::$_instance;
+        }
     }
     
-    public static function setModelPath($path)
+    protected function __construct()
     {
-        self::$modelPath = $path;
+    
     }
     
-    public static function loadModels($lazy = true)
+    public function setOptions(Array $options)
     {
-        $path = self::$_modelPath;
+        $this->_options = $options;
+        $adapterOptions = $options["adapter"];
+        if ($adapterOptions["type"] && $adapterOptions["host"] &&  $adapterOptions["db"]) {
+            $this->_getAdapter($options["adapter"]);
+        }
+    }
+      
+    public function registerCollection($collectionName)
+    {
+        $this->_collections[] = $collectionName;
+        $this->_collections = array_unique($this->_collections);
+    }
+    
+    public function registerObject($objectName)
+    {
+        $this->_objects[] = $objectName;
+        $this->_objects = array_unique($this->_objects);
+    }
+    
+    protected function _getAdapter($options)
+    {
+        $type = $options["type"];
+        if ($type) {
+            $adapterClassName = "Modela_Adapter_" . ucfirst((strtolower($type)));  
+            try {
+                $adapter = new $adapterClassName($options);
+                return $adapter;
+            } catch (Modela_Exception $e) {
+                return null;
+            }         
+        } 
+        return null;
     }
     
     public static function reset()
     {
-        self::$_adap = null;
-        self::$_modelPath = null;
+        self::$_instance = null;
+    }
+    
+    public static function isInitialized()
+    {
+        return self::$_instance instanceof Modela_Core;
     }
 }

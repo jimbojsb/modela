@@ -1,7 +1,11 @@
 <?php
 class Modela_Loader
 {
+    const MODELA_FOLDER_COLLECTIONS = 'collections';
+    const MODELA_FOLDER_OBJECTS = 'objects';
+    
     protected static $_instance;
+    protected $_modelsPath;
     
     public static function getInstance()
     {
@@ -11,7 +15,7 @@ class Modela_Loader
         return self::$_instance;
     }
     
-    public function __construct()
+    protected function __construct()
     {
         spl_autoload_register(array($this, 'loadClass'));
     }
@@ -19,9 +23,40 @@ class Modela_Loader
     public function loadClass($className)
     {
         $classParts = explode('_', $className);
+        if ($classParts[0] != 'Modela') {
+            return;
+        }
         $realClassPath = implode('/', $classParts) . ".php";
-        if (file_exists($realClassPath)) {
-            require_once($realClassPath);
+        require_once($realClassPath);
+    }
+    
+    public function loadModels($modelsPath)
+    {       
+        $this->_modelsPath = $modelsPath;
+
+        
+        
+        $collectionsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_COLLECTIONS;
+        $objectsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_OBJECTS;
+        
+        $core = Modela_Core::getInstance();
+        
+        $di = new DirectoryIterator($collectionsFolder);
+        foreach ($di as $file) {
+            if (!$file->isDot()) {
+                $collectionName = str_replace('.php', '', $file);
+                $core->registerCollection($collectionName);
+                require_once($file->getPathname());
+            }
+        }
+        
+        $di = new DirectoryIterator($objectsFolder);
+        foreach ($di as $file) {
+            if (!$file->isDot()) {
+                $objectName = str_replace('.php', '', $file);
+                $core->registerObject($objectName);
+                require_once($file->getPathname());
+            }
         }
     }
 }

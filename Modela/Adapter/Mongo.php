@@ -4,11 +4,13 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
     private $_conn;
     private $_db;
     
-    public function __construct($hostname, $username, $password, $dbname)
+    public function __construct($options)
     {
+        $hostname = $options["host"];
+        $db = $options["db"];
         $connectionString = "mongodb://" . $hostname;
         $this->_conn = new Mongo($connectionString);
-        $this->_db = $this->_conn->$dbname;    
+        $this->_db = $this->_conn->$db;    
     }
     
     public function getConnection()
