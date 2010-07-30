@@ -28,12 +28,36 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
         $collectionName = strtolower($doc->getCollection());
         $collection = $this->_db->$collectionName;
         $data = $doc->asArray();
+        if (isset($data["id"])) {
+            $data["_id"] = $data["id"];
+            unset($data["id"]);
+        }
         $collection->save($data);   
     }
     
     public function delete(Modela_Doc $doc)
     {
         
+    }
+    
+    public function find(Modela_Query $query)
+    {
+        $collectionName = $query->getCollection()->getName();
+        $collection = $this->_db->$collectionName;
+        $data = $collection->find($query->asArray());
+        
+        if ($data->count() > 0) {
+            $res = array();
+            while ($data->hasNext()) {
+                $row = $data->getNext();
+                $row["id"] = $row["_id"]->__toString();
+                unset($row["_id"]);
+                $res[] = $row;   
+            }
+            return $res;
+        } else {
+            return array();
+        }
     }
     
     public function setDb($dbName)
