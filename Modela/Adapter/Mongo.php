@@ -29,7 +29,7 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
         $collection = $this->_db->$collectionName;
         $data = $doc->asArray();
         if (isset($data["id"])) {
-            $data["_id"] = $data["id"];
+            $data["_id"] = new MongoId($data["id"]);
             unset($data["id"]);
         }
         $collection->save($data);   
