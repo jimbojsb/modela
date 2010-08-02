@@ -27,17 +27,21 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
     {
         $collectionName = strtolower($doc->getCollection());
         $collection = $this->_db->$collectionName;
-        $data = $doc->asArray();
-        if (isset($data["id"])) {
-            $data["_id"] = new MongoId($data["id"]);
-            unset($data["id"]);
-        }
+        $data = $this->_convertId($doc->asArray());
         $collection->save($data);   
     }
     
     public function delete(Modela_Doc $doc)
     {
-        
+        if (!$doc->id) {
+            throw new Modela_Exception("document has no id therefore it would be difficult to delete it");
+        }
+        $query = new Modela_Query();
+        $data = $this->_convertId($doc->asArray());
+        $query->_id = $data["_id"];
+        $collectionName = $doc->getCollection();
+        $collection = $this->_db->$collectionName;
+        $collection->remove($query->asArray());     
     }
     
     public function find(Modela_Query $query)
@@ -63,5 +67,19 @@ class Modela_Adapter_Mongo implements Modela_Adapter_Interface
     public function setDb($dbName)
     {
         $this->_db = $dbName;
+    }
+    
+    /**
+     * 
+     * @param Model_Doc $doc
+     * @return Modela_Doc
+     */
+    protected function _convertId(Array $data) 
+    {
+        if (isset($data["id"])) {
+            $data["_id"] = new MongoId($data["id"]);
+            unset($data["id"]);
+        }
+        return $data;
     }
 }

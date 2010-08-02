@@ -4,6 +4,13 @@ class Modela_Query
     protected $_criteria = array();
     protected $_collection;
     
+    public function __construct(Array $criteria = null) 
+    {
+        if ($criteria !== null) {
+            $this->_criteria = $criteria;
+        }    
+    }
+    
     public function __set($key, $value)
     {
         $this->_criteria[$key] = $value;

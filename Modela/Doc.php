@@ -36,7 +36,8 @@ class Modela_Doc
     
     public function delete()
     {
-        
+        $core = Modela_Core::getInstance();
+        $db = $core->getAdapter()->delete($this);
     }
     
     public function setCollection($collectionName)
@@ -46,7 +47,7 @@ class Modela_Doc
     
     public function getCollection()
     {
-        return $this->_collection;
+        return strtolower($this->_collection);
     }
     
     public function asArray()
