@@ -14,6 +14,11 @@ class Modela_Query
     public function __set($key, $value)
     {
         $this->_criteria[$key] = $value;
+        foreach ($this->_criteria as $key => $val) {
+            if ($val === null) {
+                unset($this->_criteria[$key]);
+            }
+        }
     }
     
     public function __get($key)

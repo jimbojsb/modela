@@ -2,13 +2,13 @@
 class Modela_Core
 {
 
+    const DEFAULT_COUCHDB_PORT = 5984;
     
     protected static $_instance;
-    
-    protected $_adapter;
-    protected $_options;
-    protected $_objects;
-    protected $_collections;
+  
+    protected $_database;
+    protected $_port = self::DEFAULT_COUCHDB_PORT;
+    protected $_hostname;
     
     /**
      * 
@@ -25,61 +25,45 @@ class Modela_Core
         }
     }
     
-    protected function __construct()
+    private function __construct()
     {
-    
+    }
+
+    public function setHostname($hostname)
+    {
+        $this->_hostname = $hostname;
     }
     
-    public function setOptions(Array $options)
+    public function setDatabase($database)
     {
-        $this->_options = $options;
-        $adapterOptions = $options["adapter"];
-        if ($adapterOptions["type"] && $adapterOptions["host"] &&  $adapterOptions["db"]) {
-            $this->_initAdapter($options["adapter"]);
+        $this->_database = $database;
+    }
+    
+    public function doRequest($method, $uri, $data = array())
+    {
+        $http = new Modela_Http();
+        $http->setMethod($method);
+        
+        $realUri = 'http://' . $this->_hostname . ':' . $this->_port . $uri; 
+        $http->setUri($realUri);
+        
+        if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
+            $http->setPostData($data);
         }
+        $response = $http->request();
+        return $response;
+        if ($response) {
+            $decodedResponse = json_decode($response);
+            
+            if ($decodedResponse) {
+                return $decodedResponse;
+            }
+        }
+        return false;
     }
-      
-    public function registerCollection($collectionName)
-    {
-        $this->_collections[] = $collectionName;
-        $this->_collections = array_unique($this->_collections);
-    }
-    
-    public function registerObject($objectName)
-    {
-        $this->_objects[] = $objectName;
-        $this->_objects = array_unique($this->_objects);
-    }
-    
-    /**
-     * @return Modela_Adapter_Interface
-     */
-    public function getAdapter()
-    {
-        return $this->_adapter;
-    }
-    
-    protected function _initAdapter($options)
-    {
-        $type = $options["type"];
-        if ($type) {
-            $adapterClassName = "Modela_Adapter_" . ucfirst((strtolower($type)));  
-            try {
-                $this->_adapter = new $adapterClassName($options);
-            } catch (Modela_Exception $e) {
-                return;
-            }         
-        } 
-        return;
-    }
-    
+
     public static function reset()
     {
         self::$_instance = null;
-    }
-    
-    public static function isInitialized()
-    {
-        return self::$_instance instanceof Modela_Core;
     }
 }

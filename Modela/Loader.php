@@ -45,7 +45,6 @@ class Modela_Loader
         foreach ($di as $file) {
             if (!$file->isDot()) {
                 $collectionName = str_replace('.php', '', $file);
-                $core->registerCollection($collectionName);
                 require_once($file->getPathname());
             }
         }
@@ -54,7 +53,6 @@ class Modela_Loader
         foreach ($di as $file) {
             if (!$file->isDot()) {
                 $objectName = str_replace('.php', '', $file);
-                $core->registerObject($objectName);
                 require_once($file->getPathname());
             }
         }

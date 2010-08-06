@@ -6,8 +6,10 @@ class Modela_Zend_Application_Resource_Modela extends Zend_Application_Resource_
         require_once('Modela/Loader.php');
         $loader = Modela_Loader::getInstance();     
         
+        
         $modela = Modela_Core::getInstance();
-        $modela->setOptions($this->_options);
+        $modela->setHostname($this->_options["hostname"]);
+        $modela->setDatabase($this->_options["database"]);
         
         $loader->loadModels($this->_options["modelsPath"]);
 

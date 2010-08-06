@@ -15,9 +15,11 @@ class Modela_Collection
         return $this->_runQuery($query);      
     }
     
-    public function find()
+    public function find(Modela_Query $query)
     {
-        $query = $this->getQuery();
+        if (!$query) {
+            $query = $this->getQuery();
+        }
         return $this->_runQuery($query);
     }
     
