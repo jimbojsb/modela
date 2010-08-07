@@ -9,7 +9,8 @@ class Modela_Http
     protected $_data;
     protected $_uri;
     protected $_method;
-    
+    protected $_headers;
+    protected $_response;
     
     public function setMethod($method)
     {
@@ -23,7 +24,7 @@ class Modela_Http
     
     public function setData($data)
     {
-        
+        $this->_data = $data;   
     }
     
     
@@ -36,14 +37,25 @@ class Modela_Http
         
         $sock = fsockopen($uriParts["host"], $uriParts["port"]);
         $requestString = $this->_method . " " . $uriParts["path"];
-        fwrite($sock, $requestString);
-        fwrite($sock, "\r\n\r\n");
+        
+        $socketData = $requestString . "\r\n";;
+        if ($this->_data) {
+            $socketData .= "Content-length: " . strlen($this->_data) . "\r\n";
+            $socketData .= "Content-type: application/json \r\n";
+            $socketData .= "\r\n";
+            $socketData .= $this->_data . "\r\n";
+        }
+        $socketData .= "\r\n\r\n";
+        
+        fwrite($sock, $socketData);
         
         $output = '';
         while (!feof($sock)) {
             $output .= fread($sock, 1024);
         }
+        list($this->_headers, $this->_response) = explode("\r\n\r\n", $output);
+        $this->_response = trim($this->_response);  
         fclose($sock);
-        return $output;        
+        return $this->_response;
     }
 }

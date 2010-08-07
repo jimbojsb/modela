@@ -1,10 +1,16 @@
 <?php
 class Modela_Doc
 {
-    public $type;
     protected $_storage = array();
-    protected $_collection;
 
+    public function __construct(Array $data = null)
+    {
+        if ($data !== null) {
+            foreach ($data as $key => $val) {
+                $this->$key = $val;
+            }
+        }
+    }
     
     public function __get($key)
     {
@@ -16,42 +22,54 @@ class Modela_Doc
         $this->_storage[$key] = $value;
     }
     
-    protected function _preSave()
-    {
-    }
-    
-    protected function _postSave()
-    {
-    }
-    
     public function save()
     {
-        $this->_preSave();
-        
+        $method = Modela_Http::METHOD_POST;
+        $data = $this->_storage;
+        $uri = '/';
+        if ($this->_id !== null) {
+            $method = Modela_Http::METHOD_PUT;
+            $uri .= $data["_id"];
+        }
         $core = Modela_Core::getInstance();
-        $db = $core->getAdapter()->save($this);
-
-        $this->_postSave();
+        $response = $core->doRequest($method, $uri, $data, true); 
+        if ($response["ok"] === true) {
+            $this->_rev = $response["rev"];
+            return true;
+        }
+        return false;
     }
     
     public function delete()
     {
+    }
+    
+    public static function get($documentId)
+    {
+        $uri = '/' . $documentId;
         $core = Modela_Core::getInstance();
-        $db = $core->getAdapter()->delete($this);
+        $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, null, true);
+        return self::processResponseArray($response);
     }
     
-    public function setCollection($collectionName)
+    public static function find($params = null)
     {
-        $this->_collection = $collectionName;
+        $uri = '/';
+        $core = Modela_Core::getInstance();
+        if ($params === null) {
+            $uri .= '_all_docs';
+        }
+        $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, null, true);
+        foreach ($response["rows"] as $row) {
+            $doc = self::get($row["id"]);
+        }
     }
     
-    public function getCollection()
+    public static function processResponseArray($response)
     {
-        return strtolower($this->_collection);
-    }
-    
-    public function asArray()
-    {
-        return $this->_storage;
+        $type = $response["type"];
+        $className = ucfirst($type);
+        $obj = new $className($response);
+        return $obj;
     }
 }

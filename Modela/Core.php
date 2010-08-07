@@ -39,21 +39,25 @@ class Modela_Core
         $this->_database = $database;
     }
     
-    public function doRequest($method, $uri, $data = array())
+    public function doRequest($method, $uri, $data = array(), $isDatabaseRequest = true)
     {
         $http = new Modela_Http();
         $http->setMethod($method);
+
+        if ($isDatabaseRequest) {
+            $uri = '/' . $this->_database . $uri;
+        }
         
         $realUri = 'http://' . $this->_hostname . ':' . $this->_port . $uri; 
         $http->setUri($realUri);
         
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
-            $http->setPostData($data);
+            $encodedData = json_encode($data);
+            $http->setData($encodedData);
         }
         $response = $http->request();
-        return $response;
         if ($response) {
-            $decodedResponse = json_decode($response);
+            $decodedResponse = json_decode($response, true);
             
             if ($decodedResponse) {
                 return $decodedResponse;
