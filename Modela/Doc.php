@@ -24,15 +24,14 @@ class Modela_Doc
     
     public function save()
     {
-        $method = Modela_Http::METHOD_POST;
-        $data = $this->_storage;
+        $method = Modela_Http::METHOD_PUT;
         $uri = '/';
-        if ($this->_id !== null) {
-            $method = Modela_Http::METHOD_PUT;
-            $uri .= $data["_id"];
+        if ($this->_id === null) {
+            $this->_id = self::generateId();
         }
+        $uri .= $this->_id;
         $core = Modela_Core::getInstance();
-        $response = $core->doRequest($method, $uri, $data, true); 
+        $response = $core->doRequest($method, $uri, $this->_storage, true); 
         if ($response["ok"] === true) {
             $this->_rev = $response["rev"];
             return true;
@@ -54,7 +53,23 @@ class Modela_Doc
         }
     }
     
-    public static function get($documentId)
+    public function refresh()
+    {
+        
+    }
+    
+    public static function generateId()
+    {
+        $rand1 = mt_rand();
+        $rand2 = mt_rand();
+        $rand3 = mt_rand();
+        $rand4 = mt_rand();
+        $bin = pack("N4", $rand1, $rand2, $rand3, $rand4);
+        $hex = bin2hex($bin);
+        return $hex;
+    }
+    
+    public static function get($documentId = null)
     {
         $uri = '/' . $documentId;
         $core = Modela_Core::getInstance();
