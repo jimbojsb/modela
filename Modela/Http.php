@@ -37,6 +37,9 @@ class Modela_Http
         
         $sock = fsockopen($uriParts["host"], $uriParts["port"]);
         $requestString = $this->_method . " " . $uriParts["path"];
+        if ($uriParts["query"]) {
+            $requestString .= "?" . $uriParts["query"];
+        }
         
         $socketData = $requestString . "\r\n";;
         if ($this->_data) {

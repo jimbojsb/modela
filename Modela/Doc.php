@@ -42,6 +42,16 @@ class Modela_Doc
     
     public function delete()
     {
+        if ($this->_id && $this->_rev) {
+            $uri = '/' . $this->_id . "?rev=" . $this->_rev;
+            $core = Modela_Core::getInstance();
+            $response = $core->doRequest(Modela_Http::METHOD_DELETE, $uri, null, true);
+            if ($response["ok"] === true) {
+                $this->_storage = array();
+                return true;
+            }
+            return false;
+        }
     }
     
     public static function get($documentId)
