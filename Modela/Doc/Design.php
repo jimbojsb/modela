@@ -10,4 +10,15 @@ class Modela_Doc_Design extends Modela_Doc
         }                
         $this->_storage['_id'] = $value;
     }
+    
+    public function addView(Modela_View $view)
+    {
+        $this->_storage['views'][$view->getName()] = $view;
+    }
+    
+    public function __toString()
+    {
+        $output = json_encode($this->_storage);
+        return $output;
+    }
 }

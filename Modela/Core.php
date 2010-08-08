@@ -45,7 +45,7 @@ class Modela_Core
         $this->_views[$designDoc][] = $viewName;
     }
     
-    public function doRequest($method, $uri, $data = array(), $isDatabaseRequest = true)
+    public function doRequest($method, $uri, $data, $isDatabaseRequest = true)
     {
         $http = new Modela_Http();
         $http->setMethod($method);
@@ -55,12 +55,16 @@ class Modela_Core
         }
         
         $realUri = 'http://' . $this->_hostname . ':' . $this->_port . $uri; 
-        $http->setUri($realUri);
+
         
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
-            $encodedData = json_encode($data);
-            $http->setData($encodedData);
+            $http->setData($data);
+        } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
+            $queryString = http_build_query($data);
+            $realUri .= "?" . $queryString;
         }
+        
+        $http->setUri($realUri);
         $response = $http->request();
         if ($response) {
             $decodedResponse = json_decode($response, true);
@@ -72,9 +76,21 @@ class Modela_Core
         return false;
     }
     
-    public function loadViews()
+    public function createViews()
     {
-        
+        foreach ($this->_views as $designDoc => $views) {
+            $doc = new Modela_Doc_Design();
+            $doc->_id = $designDoc;
+            $docExists = Modela_Doc::get($doc->_id);
+            if ($docExists instanceof Modela_Doc) {
+                $doc->_rev = $docExists->_rev;
+            }
+            foreach ($views as $view) {
+                $view = new $view();
+                $doc->addView($view);
+            }
+            $doc->save();
+        }
     }
 
     public static function reset()

@@ -39,7 +39,7 @@ class Modela_Doc
         }
         $uri .= $this->_id;
         $core = Modela_Core::getInstance();
-        $response = $core->doRequest($method, $uri, $this->_storage, true); 
+        $response = $core->doRequest($method, $uri, $this->__toString(), true); 
         if ($response["ok"] === true) {
             $this->_rev = $response["rev"];
             return true;
@@ -77,6 +77,12 @@ class Modela_Doc
         return $hex;
     }
     
+    public function __toString()
+    {
+        $output = json_encode($this->_storage);
+        return $output;
+    }
+    
     public static function get($documentId = null)
     {
         $uri = '/' . $documentId;
@@ -85,30 +91,38 @@ class Modela_Doc
         return self::processResponseArray($response);
     }
     
-    public static function find($viewName, $params)
-    {
-        if (is_array($params)) {
-            $startKey = $params["start"];
-            $endKey = $params["end"];
-        } else {
-            $key = $params;
-        }
-        
+    public static function find($designDocName = null, $viewName = null, $params = null)
+    {        
         $uri = '/';
         $core = Modela_Core::getInstance();
         if ($params === null) {
             $uri .= '_all_docs';
+        } else {
+            $uri .= '_design/' . $designDocName . '/_view/' . $viewName;
         }
-        $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, null, true);
+        $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, $params, true);
+        $rows = array();
         foreach ($response["rows"] as $row) {
-            $doc = self::get($row["id"]);
+            if ($row["id"]) {
+                $doc = self::get($row["id"]);
+                $rows[] = $doc;
+            } else if ($row["key"]) {
+                $doc = new Modela_Response();
+                $doc->key = $row["key"];
+                $doc->value = $row["value"];
+                $rows[] = $doc;
+            }
         }
+        return $rows;
     }
     
     public static function processResponseArray($response)
     {
         $type = $response["type"];
         $className = ucfirst($type);
+        if (!$className) {
+            $className = "Modela_Doc";
+        }
         $obj = new $className($response);
         return $obj;
     }

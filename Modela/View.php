@@ -1,15 +1,19 @@
 <?php
 class Modela_View
 {
-    protected $_mapFunction;
-    protected $_reduceFunction;
-    
+    public $map;
+    public $reduce;
+        
     public function __toString()
     {
-        $name = strtolower(get_class($this));
-        $view = array();
-        $view[$name]["map"] = $this->_mapFunction;
-        $view[$name]["reduce"] = $this->_reduceFunction;
-        return json_encode($view);
+        $obj = new stdClass();
+        $obj->map = $this->_mapFunction;
+        $obj->reduce = $this->_reduceFunction;
+        return json_encode($obj);
+    }
+    
+    public function getName()
+    {
+        return strtolower(get_class($this));
     }
 }
