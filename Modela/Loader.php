@@ -1,7 +1,7 @@
 <?php
 class Modela_Loader
 {
-    const MODELA_FOLDER_COLLECTIONS = 'collections';
+    const MODELA_FOLDER_VIEWS = 'views';
     const MODELA_FOLDER_OBJECTS = 'objects';
     
     protected static $_instance;
@@ -36,16 +36,26 @@ class Modela_Loader
 
         
         
-        $collectionsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_COLLECTIONS;
+        $viewsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_VIEWS;
         $objectsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_OBJECTS;
         
         $core = Modela_Core::getInstance();
         
-        $di = new DirectoryIterator($collectionsFolder);
+        $di = new DirectoryIterator($viewsFolder);
         foreach ($di as $file) {
-            if (!$file->isDot()) {
-                $collectionName = str_replace('.php', '', $file);
-                require_once($file->getPathname());
+            if (!$file->isDot() && $file->isDir()) {
+                $di2 = new DirectoryIterator($file->getPathname());
+                foreach ($di2 as $file2) {
+                    if (!$file2->isDot()) {
+                        $designDocFull = strtolower($file2->getPath());
+                        $designDocParts = explode('/', $designDocFull);
+                        $designDoc = $designDocParts[count($designDocParts) - 1];
+                        $viewName = str_replace('.php', '', $file2->getFilename());
+                        $core->registerView($viewName, $designDoc);
+                        require_once($file2->getPathname());
+                    }
+                }
+
             }
         }
         

@@ -14,11 +14,19 @@ class Modela_Doc
     
     public function __get($key)
     {
+        $getterOverrideName = "get" . ucfirst(str_replace("_", "", $key));
+        if (method_exists($this, $getterOverrideName)) {
+            return $this->$getterOverrideName();
+        }
         return $this->_storage[$key];
     }
     
     public function __set($key, $value) 
     {
+        $setterOverrideName = "set" . ucfirst(str_replace("_", "", $key));
+        if (method_exists($this, $setterOverrideName)) {
+            return $this->$setterOverrideName($value);
+        }
         $this->_storage[$key] = $value;
     }
     
@@ -77,8 +85,15 @@ class Modela_Doc
         return self::processResponseArray($response);
     }
     
-    public static function find($params = null)
+    public static function find($viewName, $params)
     {
+        if (is_array($params)) {
+            $startKey = $params["start"];
+            $endKey = $params["end"];
+        } else {
+            $key = $params;
+        }
+        
         $uri = '/';
         $core = Modela_Core::getInstance();
         if ($params === null) {

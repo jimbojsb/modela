@@ -9,6 +9,7 @@ class Modela_Core
     protected $_database;
     protected $_port = self::DEFAULT_COUCHDB_PORT;
     protected $_hostname;
+    protected $_views;
     
     /**
      * 
@@ -38,6 +39,11 @@ class Modela_Core
     {
         $this->_database = $database;
     }
+   
+    public function registerView($viewName, $designDoc)
+    {
+        $this->_views[$designDoc][] = $viewName;
+    }
     
     public function doRequest($method, $uri, $data = array(), $isDatabaseRequest = true)
     {
@@ -64,6 +70,11 @@ class Modela_Core
             }
         }
         return false;
+    }
+    
+    public function loadViews()
+    {
+        
     }
 
     public static function reset()
