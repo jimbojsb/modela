@@ -95,7 +95,7 @@ class Modela_Doc
         return self::processResponseArray($response);
     }
     
-    public static function find($designDocName = null, $viewName = null, $params = null)
+    public static function find($designDocName = null, $viewName = null, $params = null, $getDocuments = false)
     {        
         $uri = '/';
         $core = Modela_Core::getInstance();
@@ -107,7 +107,7 @@ class Modela_Doc
         $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, $params, true);
         $rows = array();
         foreach ($response["rows"] as $row) {
-            if ($row["id"]) {
+            if ($row["id"] && $getDocuments) {
                 $doc = self::get($row["id"]);
                 $rows[] = $doc;
             } else if ($row["key"]) {

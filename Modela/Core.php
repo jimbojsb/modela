@@ -60,6 +60,11 @@ class Modela_Core
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
+            $keys = array_keys($data);
+            $values = array_values($data);
+            for ($c = 0; $c < count($keys); $c++) {
+                $data[$keys[$c]] = '"' . $values[$c] . '"';
+            }
             $queryString = http_build_query($data);
             $realUri .= "?" . $queryString;
         }
