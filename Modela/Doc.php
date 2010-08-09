@@ -10,6 +10,7 @@ class Modela_Doc
                 $this->$key = $val;
             }
         }
+        $this->type = strtolower(get_class($this));
     }
     
     public function __get($key)
