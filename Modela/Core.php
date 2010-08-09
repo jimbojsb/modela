@@ -82,7 +82,7 @@ class Modela_Core
             $doc = new Modela_Doc_Design();
             $doc->_id = $designDoc;
             $docExists = Modela_Doc::get($doc->_id);
-            if ($docExists instanceof Modela_Doc) {
+            if ($docExists->_rev) {
                 $doc->_rev = $docExists->_rev;
             }
             foreach ($views as $view) {
@@ -90,6 +90,8 @@ class Modela_Core
                 $doc->addView($view);
             }
             $doc->save();
+            unset($docExists);
+            unset($view);
         }
     }
 
