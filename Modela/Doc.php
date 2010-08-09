@@ -30,12 +30,12 @@ class Modela_Doc
         $this->_storage[$key] = $value;
     }
     
-    public function save()
+    public function save($refreshIfNeeded = false)
     {
         $method = Modela_Http::METHOD_PUT;
         $uri = '/';
         if ($this->_id === null) {
-            $this->_id = self::generateId();
+            $this->_id = $this->generateId();
         }
         $uri .= $this->_id;
         $core = Modela_Core::getInstance();
@@ -43,6 +43,10 @@ class Modela_Doc
         if ($response["ok"] === true) {
             $this->_rev = $response["rev"];
             return true;
+        } else if ($response["error"] == 'conflict' && $refreshIfNeeded) {
+            $doc = self::get($this->_id);
+            $this->_rev = $doc->_rev;
+            $this->save();
         }
         return false;
     }
@@ -66,7 +70,7 @@ class Modela_Doc
         
     }
     
-    public static function generateId()
+    public function generateId()
     {
         $rand1 = mt_rand();
         $rand2 = mt_rand();
