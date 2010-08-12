@@ -7,7 +7,6 @@ class Modela_Zend_Auth_Adapter implements Zend_Auth_Adapter_Interface
     protected $_identityValue;
     protected $_designDoc;
     protected $_view;
-    protected $_passwordCallback;
     
     public function authenticate()
     {
@@ -15,10 +14,12 @@ class Modela_Zend_Auth_Adapter implements Zend_Auth_Adapter_Interface
         if ($user) {
             $user = array_shift($user);
             if ($this->_passwordIsValid($user)) {
-                $result = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user->_id, array());                
+                $result = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user, array());                
+            } else {
+                $result = new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);
             }
         } else {
-            $result = new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID);                
+            $result = new Zend_Auth_Result(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, null);                
         }
         return $result;
     }
@@ -67,11 +68,4 @@ class Modela_Zend_Auth_Adapter implements Zend_Auth_Adapter_Interface
         $this->_view = $_view;
         return $this;
     }
-
-	public function setPasswordCallback($_passwordCallback)
-    {
-        $this->_passwordCallback = $_passwordCallback;
-        return $this;
-    }
-
 }

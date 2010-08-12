@@ -7,7 +7,7 @@ class Modela_Doc
     {
         if ($data !== null) {
             foreach ($data as $key => $val) {
-                $this->$key = $val;
+                $this->set($key, $val);
             }
         }
         $this->type = strtolower(get_class($this));
@@ -28,6 +28,11 @@ class Modela_Doc
         if (method_exists($this, $setterOverrideName)) {
             return $this->$setterOverrideName($value);
         }
+        $this->set($key, $value);
+    }
+    
+    public function set($key, $value)
+    {
         $this->_storage[$key] = $value;
     }
     
