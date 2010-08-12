@@ -93,6 +93,11 @@ class Modela_Doc
         return $output;
     }
     
+    public function asArray()
+    {
+        return $this->_storage;
+    }
+    
     public static function get($documentId = null)
     {
         $uri = '/' . $documentId;
