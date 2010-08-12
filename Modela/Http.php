@@ -5,6 +5,7 @@ class Modela_Http
     const METHOD_POST = 'POST';
     const METHOD_DELETE = 'DELETE';
     const METHOD_PUT = 'PUT';
+    const HTTP_CRLF = "\r\n";
     
     protected $_data;
     protected $_uri;
@@ -41,14 +42,14 @@ class Modela_Http
             $requestString .= "?" . $uriParts["query"];
         }
         
-        $socketData = $requestString . "\r\n";;
+        $socketData = $requestString . self::HTTP_CRLF;
         if ($this->_data) {
-            $socketData .= "Content-length: " . strlen($this->_data) . "\r\n";
-            $socketData .= "Content-type: application/json \r\n";
-            $socketData .= "\r\n";
-            $socketData .= $this->_data . "\r\n";
+            $socketData .= "Content-length: " . strlen($this->_data) . self::HTTP_CRLF;
+            $socketData .= "Content-type: application/json" . self::HTTP_CRLF;
+            $socketData .= self::HTTP_CRLF;
+            $socketData .= $this->_data . self::HTTP_CRLF;
         }
-        $socketData .= "\r\n\r\n";
+        $socketData .= self::HTTP_CRLF . self::HTTP_CRLF;
         
         fwrite($sock, $socketData);
         
