@@ -63,7 +63,11 @@ class Modela_Core
             $keys = array_keys($data);
             $values = array_values($data);
             for ($c = 0; $c < count($keys); $c++) {
-                $data[$keys[$c]] = '"' . $values[$c] . '"';
+                if (is_string($values[$c])) {
+                    $data[$keys[$c]] = '"' . $values[$c] . '"';
+                } else if (is_bool($values[$c])) {
+                    $data[$keys[$c]] = $values[$c] === true ? 'true' : 'false';
+                }
             }
             $queryString = http_build_query($data);
             $realUri .= "?" . $queryString;
