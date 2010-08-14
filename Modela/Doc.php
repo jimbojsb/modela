@@ -122,8 +122,9 @@ class Modela_Doc
                 $rows[] = $row["doc"];
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
-                $doc->key = $row["key"];
-                $doc->value = $row["value"];
+                foreach ($row as $key => $value) {
+                    $doc->$key = $value;
+                }
                 $rows[] = $doc;
             }
         }
