@@ -45,6 +45,15 @@ class Modela_Core
         $this->_views[$designDoc][] = $viewName;
     }
     
+    public function getBaseUrl($includeDatabase)
+    {
+        $url = 'http://' . $this->_hostname . ':' . $this->_port;
+        if ($includeDatabase) {
+            $url .= '/' . $this->_database;
+        }
+        return $url;
+    }
+    
     public function doRequest($method, $uri, $data, $isDatabaseRequest = true)
     {
         $http = new Modela_Http();

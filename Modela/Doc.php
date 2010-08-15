@@ -7,7 +7,18 @@ class Modela_Doc
     {
         if ($data !== null) {
             foreach ($data as $key => $val) {
-                $this->set($key, $val);
+                if ($key === '_attachments') {
+                    $attachmentList = array();
+                    foreach ($val as $attachmentName => $attachmentProperties) {
+                        $attachmentProperties["parent_document"] = $this;
+                        $attachmentProperties["filename"] = $attachmentName;
+                        $attachmentObject = new Modela_Doc_Attachment($attachmentProperties);
+                        $attachmentList[] = $attachmentObject;
+                    }
+                    $this->set($key, $attachmentList);
+                } else {
+                    $this->set($key, $val);
+                }
             }
         }
         $this->type = strtolower(get_class($this));
@@ -33,7 +44,11 @@ class Modela_Doc
     
     public function set($key, $value)
     {
-        $this->_storage[$key] = $value;
+        if ($value === null) {
+            unset($this->_storage[$key]);
+        } else {
+            $this->_storage[$key] = $value;
+        }
     }
     
     public function save($refreshIfNeeded = false)
@@ -74,6 +89,21 @@ class Modela_Doc
     public function refresh()
     {
         
+    }
+    
+    public function hasAttachments()
+    {
+        return is_array($this->_attachments);
+    }
+    
+    public function getAttachements()
+    {
+        return $this->_attachments;
+    }
+    
+    public function remoteAttachments()
+    {
+        $this->set('_attachments', null);
     }
     
     public function generateId()
@@ -119,7 +149,7 @@ class Modela_Doc
         $rows = array();
         foreach ($response["rows"] as $row) {
             if ($docsOnly) {
-                $rows[] = $row["doc"];
+                $rows[] = self::processResponseArray($row["doc"]);
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
                 foreach ($row as $key => $value) {
