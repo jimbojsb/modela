@@ -7,18 +7,7 @@ class Modela_Doc
     {
         if ($data !== null) {
             foreach ($data as $key => $val) {
-                if ($key === '_attachments') {
-                    $attachmentList = array();
-                    foreach ($val as $attachmentName => $attachmentProperties) {
-                        $attachmentProperties["parent_document"] = $this;
-                        $attachmentProperties["filename"] = $attachmentName;
-                        $attachmentObject = new Modela_Doc_Attachment($attachmentProperties);
-                        $attachmentList[] = $attachmentObject;
-                    }
-                    $this->set($key, $attachmentList);
-                } else {
-                    $this->set($key, $val);
-                }
+                $this->set($key, $val);
             }
         }
         $this->type = strtolower(get_class($this));
@@ -106,10 +95,13 @@ class Modela_Doc
         $this->set('_attachments', null);
     }
     
-    public function addAttachment(Modela_Doc_Attachment $att)
+    public function addAttachment($filename, $rawData, $contentType = null)
     {
         $attachments = is_array($this->_attachments) ? $this->_attachments : array();
-        $attachments[] = $att;
+        $newAttachment = array();
+        $newAttachment['data'] = base64_encode($rawData);
+        $newAttachment['content_type'] = $contentType;
+        $attachments[$filename] = $newAttachment;
         $this->set("_attachments", $attachments);
     }
     
@@ -127,15 +119,7 @@ class Modela_Doc
     public function __toString()
     {
         $data = $this->_storage;
-        if ($data['_attachments']) {
-            foreach ($data['_attachments'] as $attachment) {
-                $tmpAttachments = $attachment->__toString();
-            }
-            $data['_attachments'] = $tmpAttachments;
-        }
         $output = json_encode($data);
-        Zend_Debug::dump($output);
-        die;
         return $output;
     }
     
@@ -186,5 +170,13 @@ class Modela_Doc
         }
         $obj = new $className($response);
         return $obj;
+    }
+    
+    public function getAttachmentUrl($attachmentFilename)
+    {
+        $core = Modela_Core::getInstance();
+        $url = $core->getBaseUrl(true);
+        $url .= '/' . $this->_id . '/' . $attachmentFilename;
+        return $url;
     }
 }
