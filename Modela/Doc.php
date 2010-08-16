@@ -101,9 +101,16 @@ class Modela_Doc
         return $this->_attachments;
     }
     
-    public function remoteAttachments()
+    public function removeAttachments()
     {
         $this->set('_attachments', null);
+    }
+    
+    public function addAttachment(Modela_Doc_Attachment $att)
+    {
+        $attachments = is_array($this->_attachments) ? $this->_attachments : array();
+        $attachments[] = $att;
+        $this->set("_attachments", $attachments);
     }
     
     public function generateId()
@@ -119,7 +126,16 @@ class Modela_Doc
     
     public function __toString()
     {
-        $output = json_encode($this->_storage);
+        $data = $this->_storage;
+        if ($data['_attachments']) {
+            foreach ($data['_attachments'] as $attachment) {
+                $tmpAttachments = $attachment->__toString();
+            }
+            $data['_attachments'] = $tmpAttachments;
+        }
+        $output = json_encode($data);
+        Zend_Debug::dump($output);
+        die;
         return $output;
     }
     
