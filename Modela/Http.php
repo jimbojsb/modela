@@ -9,18 +9,44 @@ class Modela_Http
     
     protected $_data;
     protected $_uri;
+    protected $_uriParts = array();
     protected $_method;
     protected $_headers;
     protected $_response;
     
+    public function __construct($uri = null) 
+    {
+        if ($uri !== null) {
+            $this->setUri($uri);
+        }    
+    }
+    
     public function setMethod($method)
     {
-        $this->_method = $method;
+        $validMethods = array(Modela_Http::METHOD_DELETE,
+                              Modela_http::METHOD_GET,
+                              Modela_Http::METHOD_POST,
+                              Modela_Http::METHOD_PUT);
+        if (in_array($method, $validMethods)) {
+            $this->_method = $method;
+        } else {
+            throw new Modela_Exception("$method is not a valid HTTP method");
+        }
     }
     
     public function setUri($uri)
     {
+        if ($uri === null) {
+            throw new Modela_Exception("uri is not valid");
+        }
+        $uriParts = parse_url($uri);
+        if (!(isset($uriParts['path']) &&
+              isset($uriParts['host']) &&
+              isset($uriParts['scheme']))) {
+            throw new Modela_Exception("uri is not valid");
+        }
         $this->_uri = $uri;
+        $this->_uriParts = $uriParts;
     }
     
     public function setData($data)
@@ -32,14 +58,15 @@ class Modela_Http
     public function request()
     {
         if ($this->_uri === null) {
-            throw new Modela_Exception("How can I make a request without a uri?");
+            throw new Modela_Exception("uri is not valid");
         }
-        $uriParts = parse_url($this->_uri);
-        
-        $sock = fsockopen($uriParts["host"], $uriParts["port"]);
-        $requestString = $this->_method . " " . $uriParts["path"];
-        if ($uriParts["query"]) {
-            $requestString .= "?" . $uriParts["query"];
+        $sock = @fsockopen($this->uriParts["host"], $this->uriParts["port"]);
+        if (!$sock) {
+            throw new Modela_Exception('unable to open socket');
+        }
+        $requestString = $this->_method . " " . $this->uriParts["path"];
+        if ($this->uriParts["query"]) {
+            $requestString .= "?" . $this->uriParts["query"];
         }
         
         $socketData = $requestString . self::HTTP_CRLF;
