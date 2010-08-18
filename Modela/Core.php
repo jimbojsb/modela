@@ -10,6 +10,7 @@ class Modela_Core
     protected $_port = self::DEFAULT_COUCHDB_PORT;
     protected $_hostname;
     protected $_views;
+    protected $_http;
     
     /**
      * 
@@ -28,6 +29,8 @@ class Modela_Core
     
     private function __construct()
     {
+        $http = new Modela_Http();
+        $this->setHttp($http);
     }
 
     public function setHostname($hostname)
@@ -45,6 +48,11 @@ class Modela_Core
         $this->_views[$designDoc][] = $viewName;
     }
     
+    public function setHttp(Modela_Http $http)
+    {
+        $this->_http = $http;
+    }
+    
     public function getBaseUrl($includeDatabase)
     {
         $url = 'http://' . $this->_hostname . ':' . $this->_port;
@@ -56,7 +64,7 @@ class Modela_Core
     
     public function doRequest($method, $uri, $data, $isDatabaseRequest = true)
     {
-        $http = new Modela_Http();
+        $http = $this->_http;
         $http->setMethod($method);
 
         if ($isDatabaseRequest) {
