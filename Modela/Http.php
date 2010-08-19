@@ -60,11 +60,11 @@ class Modela_Http
         if ($this->_uri === null) {
             throw new Modela_Exception("uri is not valid");
         }
-        $sock = @fsockopen($this->uriParts["host"], $this->uriParts["port"]);
+        $sock = @fsockopen($this->_uriParts["host"], $this->_uriParts["port"]);
         if (!$sock) {
             throw new Modela_Exception('unable to open socket');
         }
-        $requestString = $this->_method . " " . $this->uriParts["path"];
+        $requestString = $this->_method . " " . $this->_uriParts["path"];
         if ($this->uriParts["query"]) {
             $requestString .= "?" . $this->uriParts["query"];
         }
@@ -87,6 +87,6 @@ class Modela_Http
         list($this->_headers, $this->_response) = explode("\r\n\r\n", $output);
         $this->_response = trim($this->_response);  
         fclose($sock);
-        return $this->_response;
+        return $this->_response;    
     }
 }

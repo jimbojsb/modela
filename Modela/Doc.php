@@ -133,7 +133,10 @@ class Modela_Doc
         $uri = '/' . $documentId;
         $core = Modela_Core::getInstance();
         $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, null, true);
-        return self::processResponseArray($response);
+        if ($response) {
+            return self::processResponseArray($response);            
+        }
+        return null;
     }
     
     public static function find($designDocName = null, $viewName = null, $params = null, $docsOnly = true)
