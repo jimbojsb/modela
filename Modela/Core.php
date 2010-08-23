@@ -9,7 +9,7 @@ class Modela_Core
     protected $_database;
     protected $_port = self::DEFAULT_COUCHDB_PORT;
     protected $_hostname;
-    protected $_views;
+    protected $_designDocs;
     protected $_http;
     
     /**
@@ -43,9 +43,9 @@ class Modela_Core
         $this->_database = $database;
     }
    
-    public function registerView($viewName, $designDoc)
+    public function registerDesignDoc($designDoc)
     {
-        $this->_views[$designDoc][] = $viewName;
+        $this->_designDocs[] = $designDoc;
     }
     
     public function setHttp(Modela_Http $http)
@@ -104,16 +104,13 @@ class Modela_Core
     
     public function createViews()
     {
-        foreach ($this->_views as $designDoc => $views) {
-            $doc = new Modela_Doc_Design();
-            $doc->_id = $designDoc;
+        foreach ($this->_designDocs as $designDoc) {
+            $className = "DD_" . $designDoc;
+            $doc = new $className();
+            $doc->_id = strtolower($designDoc);
             $docExists = Modela_Doc::get($doc->_id);
             if ($docExists->_rev) {
                 $doc->_rev = $docExists->_rev;
-            }
-            foreach ($views as $view) {
-                $view = new $view();
-                $doc->addView($view);
             }
             $doc->save();
             unset($docExists);

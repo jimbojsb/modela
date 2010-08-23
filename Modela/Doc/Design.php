@@ -11,9 +11,9 @@ class Modela_Doc_Design extends Modela_Doc
         $this->_storage['_id'] = $value;
     }
     
-    public function addView(Modela_View $view)
+    public function addView($name, Modela_View $view)
     {
-        $this->_storage['views'][$view->getName()] = $view;
+        $this->_storage['views'][$name] = $view;
     }
     
     public function __toString()
