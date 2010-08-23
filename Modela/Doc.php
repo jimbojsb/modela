@@ -139,11 +139,18 @@ class Modela_Doc
         return null;
     }
     
-    public static function find($designDocName = null, $viewName = null, $params = null, $docsOnly = true)
+    public static function find($designDocName = null, $viewName = null, $params = null, $docsOnly = false)
     {        
         $uri = '/';
         $core = Modela_Core::getInstance();
-        if ($params === null) {
+        
+        if ($params === null && $designDocName !== null && $viewName !== null) {
+            $designDoc = Modela_Doc_Design::getDesignDocInstance($designDocName);
+            $view = $designDoc->getView($viewName);
+            $params = $view->getDefaultParams() ? $view->getDefaultParams() : null;
+        }
+        
+        if ($params === null && $designDocName === null && $viewName === null) {
             $uri .= '_all_docs';
         } else {
             $uri .= '_design/' . $designDocName . '/_view/' . $viewName;
@@ -162,6 +169,11 @@ class Modela_Doc
             }
         }
         return $rows;
+    }
+    
+    public static function findDocs($designDocName = null, $viewName = null, $params = null)
+    {
+        return self::find($designDocName, $viewName, $params, true);
     }
     
     public static function processResponseArray($response)

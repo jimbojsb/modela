@@ -16,9 +16,20 @@ class Modela_Doc_Design extends Modela_Doc
         $this->_storage['views'][$name] = $view;
     }
     
+    public function getView($viewName)
+    {
+        return $this->_storage['views'][$viewName];
+    }
+    
     public function __toString()
     {
         $output = json_encode($this->_storage);
         return $output;
+    }
+    
+    public static function getDesignDocInstance($designDocName)
+    {
+        $className = "DD_" . $designDocName;
+        return new $className();
     }
 }

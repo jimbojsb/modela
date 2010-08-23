@@ -48,6 +48,16 @@ class Modela_Core
         $this->_designDocs[] = $designDoc;
     }
     
+    public function getDesignDocs()
+    {
+        return $this->_designDocs;
+    }
+    
+    public function getDesignDoc($name)
+    {
+        return $this->_designDocs[$name];
+    }
+    
     public function setHttp(Modela_Http $http)
     {
         $this->_http = $http;
