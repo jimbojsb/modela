@@ -144,10 +144,12 @@ class Modela_Doc
         $uri = '/';
         $core = Modela_Core::getInstance();
         
-        if ($params === null && $designDocName !== null && $viewName !== null) {
+        if ($designDocName !== null && $viewName !== null) {
             $designDoc = Modela_Doc_Design::getDesignDocInstance($designDocName);
             $view = $designDoc->getView($viewName);
-            $params = $view->getDefaultParams() ? $view->getDefaultParams() : null;
+            $defaultViewParams = $view->getDefaultParams();
+            $mergedParams = self::_mergeParams($params, $defaultViewParams);
+            $params = $mergedParams ? $mergedParams : null;
         }
         
         if ($params === null && $designDocName === null && $viewName === null) {
@@ -193,5 +195,17 @@ class Modela_Doc
         $url = $core->getBaseUrl(true);
         $url .= '/' . $this->_id . '/' . $attachmentFilename;
         return $url;
+    }
+    
+    private static function _mergeParams($passedParams, $defaultViewParams)
+    {
+        $newParams = $defaultViewParams;
+        if (!$passedParams) {
+            return $newParams;
+        }
+        foreach ($passedParams as $key => $val) {
+            $newParams[$key] = $val;
+        }
+        return $newParams;
     }
 }
