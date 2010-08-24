@@ -94,6 +94,10 @@ class Modela_Core
                     $data[$keys[$c]] = '"' . $values[$c] . '"';
                 } else if (is_bool($values[$c])) {
                     $data[$keys[$c]] = $values[$c] === true ? 'true' : 'false';
+                } else if (is_array($values[$c])) {
+                    $data[$keys[$c]] = json_encode($values[$c]);
+                } else if (is_numeric($values[$c])) {
+                    $data[$keys[$c]] = $values[$c];
                 }
             }
             $queryString = http_build_query($data);
@@ -126,6 +130,11 @@ class Modela_Core
             unset($docExists);
             unset($view);
         }
+    }
+    
+    private function _sanitizeData($data)
+    {
+        $newData = array();
     }
 
     public static function reset()
