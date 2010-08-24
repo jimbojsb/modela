@@ -65,8 +65,8 @@ class Modela_Http
             throw new Modela_Exception('unable to open socket');
         }
         $requestString = $this->_method . " " . $this->_uriParts["path"];
-        if ($this->uriParts["query"]) {
-            $requestString .= "?" . $this->uriParts["query"];
+        if ($this->_uriParts["query"]) {
+            $requestString .= "?" . $this->_uriParts["query"];
         }
         
         $socketData = $requestString . self::HTTP_CRLF;
