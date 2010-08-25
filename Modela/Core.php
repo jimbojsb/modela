@@ -87,19 +87,7 @@ class Modela_Core
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
-            $keys = array_keys($data);
-            $values = array_values($data);
-            for ($c = 0; $c < count($keys); $c++) {
-                if (is_string($values[$c])) {
-                    $data[$keys[$c]] = '"' . $values[$c] . '"';
-                } else if (is_bool($values[$c])) {
-                    $data[$keys[$c]] = $values[$c] === true ? 'true' : 'false';
-                } else if (is_array($values[$c])) {
-                    $data[$keys[$c]] = json_encode($values[$c]);
-                } else if (is_numeric($values[$c])) {
-                    $data[$keys[$c]] = $values[$c];
-                }
-            }
+            $data = self::_sanitizeData($data);
             $queryString = http_build_query($data);
             $realUri .= "?" . $queryString;
         }
@@ -134,7 +122,28 @@ class Modela_Core
     
     private function _sanitizeData($data)
     {
-        $newData = array();
+        $keys = array_keys($data);
+        $vals = array_values($data);
+        
+        for ($c = 0; $c < count($keys); $c++) {
+            $val = $vals[$c];
+            $key = $keys[$c];
+            switch (gettype($val)) {
+                case 'boolean':
+                    $realval = $val === true ? "true" : "false";
+                    $data[$key] = $realval;           
+                    break;
+                case 'string':
+                    $realval = '"' . $val . '"';
+                    $data[$key] = $realval;
+                    break;
+                case 'array' :
+                    $realval = json_encode($val);
+                    $data[$key] = $realval;
+                    break;
+            }
+        }        
+        return $data;
     }
 
     public static function reset()
