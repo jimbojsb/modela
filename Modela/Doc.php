@@ -61,6 +61,22 @@ class Modela_Doc
         return false;
     }
     
+    public static function saveMany(Array $docs)
+    {
+        $method = Modela_Http::METHOD_POST;
+        $uri = '/_bulk_docs';
+        $core = Modela_Core::getInstance();
+        $docStorage = array();
+        foreach ($docs as $doc) {
+            $docStorage[] = $doc->asArray();
+        }
+        $data = json_encode(array("docs" => $docStorage));
+        $response = $core->doRequest($method, $uri, $data, true); 
+        if (count($resposne) == count($docs)) {
+            return true;
+        }
+    }
+    
     public function delete()
     {
         if ($this->_id && $this->_rev) {
