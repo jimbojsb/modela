@@ -68,6 +68,9 @@ class Modela_Doc
         $core = Modela_Core::getInstance();
         $docStorage = array();
         foreach ($docs as $doc) {
+            if ($doc->_id === null) {
+                $doc->_id = $doc->generateId();
+            }
             $docStorage[] = $doc->asArray();
         }
         $data = json_encode(array("docs" => $docStorage));
@@ -89,6 +92,14 @@ class Modela_Doc
             }
             return false;
         }
+    }
+    
+    public function deleteMany(Array $docs)
+    {
+        foreach ($docs as $doc) {
+            $doc->_deleted = true;
+        }
+        self::saveMany($docs);
     }
     
     public function refresh()
