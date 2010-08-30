@@ -9,7 +9,7 @@ class Modela_Core
     protected $_database;
     protected $_port = self::DEFAULT_COUCHDB_PORT;
     protected $_hostname;
-    protected $_designDocs;
+    protected $_views;
     protected $_http;
     
     /**
@@ -43,9 +43,9 @@ class Modela_Core
         $this->_database = $database;
     }
    
-    public function registerDesignDoc($designDoc)
+    public function registerView($designDoc, $viewName)
     {
-        $this->_designDocs[] = $designDoc;
+        $this->_views[$designDoc][] = $viewName;
     }
     
     public function getDesignDocs()
@@ -106,10 +106,15 @@ class Modela_Core
     
     public function createViews()
     {
-        foreach ($this->_designDocs as $designDoc) {
-            $className = "DD_" . $designDoc;
-            $doc = new $className();
-            $doc->_id = strtolower($designDoc);
+        foreach ($this->_views as $designDoc => $views) {
+            $doc = new Modela_Doc_Design();
+            $doc->_id = $designDoc;
+            foreach ($views as $view) {
+                $className = ucfirst($designDoc) . "_" . $view;
+                $obj = new $className;
+                $serializeable = $obj->getSerializable();
+                $doc->addView($view, $serializeable);                       
+            }
             $docExists = Modela_Doc::get($doc->_id);
             if ($docExists->_rev) {
                 $doc->_rev = $docExists->_rev;

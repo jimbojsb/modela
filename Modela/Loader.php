@@ -43,12 +43,20 @@ class Modela_Loader
         
         $di = new DirectoryIterator($viewsFolder);
         foreach ($di as $file) {
-            if (!$file->isDot()) {
-                $designDoc = str_replace('.php', '', $file->getFilename());
-                $core->registerDesignDoc($designDoc);
-                require_once($file->getPathname());
+            if (!$file->isDot() && $file->isDir()) {
+                $designDoc = $file->getFilename();
+                $viewIterator = new DirectoryIterator($file->getPathname());
+                foreach ($viewIterator as $view) {
+                    if (!$view->isDot()) {
+                        $viewName = str_replace('.php', '', $view->getFilename());
+                        $core->registerView($designDoc, $viewName);
+                        require_once($view->getPathname());                    
+                    }
+
+                }
             }
         }
+        
         $di = new DirectoryIterator($objectsFolder);
         foreach ($di as $file) {
             if (!$file->isDot()) {

@@ -13,6 +13,7 @@ class Modela_Http
     protected $_method;
     protected $_headers;
     protected $_response;
+    protected $_debugMode = true;
     
     public function __construct($uri = null) 
     {
@@ -73,17 +74,17 @@ class Modela_Http
         if ($this->_data) {
             $socketData .= "Content-length: " . strlen($this->_data) . self::HTTP_CRLF;
             $socketData .= "Content-type: application/json" . self::HTTP_CRLF;
+            $socketData .= "Connection: close" . self::HTTP_CRLF;
             $socketData .= self::HTTP_CRLF;
             $socketData .= $this->_data . self::HTTP_CRLF;
         }
         $socketData .= self::HTTP_CRLF . self::HTTP_CRLF;
-        
+
         fwrite($sock, $socketData);
-        
+
         $output = '';
-        while (!feof($sock)) {
-            $output .= fread($sock, 1024);
-        }
+        $output .= stream_get_contents($sock);
+
         list($this->_headers, $this->_response) = explode("\r\n\r\n", $output);
         $this->_response = trim($this->_response);  
         fclose($sock);

@@ -161,7 +161,7 @@ class Modela_Doc
         $core = Modela_Core::getInstance();
         $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, null, true);
         if ($response) {
-            return self::processResponseArray($response);            
+            return self::createDocFromResponse($response);            
         }
         return null;
     }
@@ -172,8 +172,7 @@ class Modela_Doc
         $core = Modela_Core::getInstance();
         
         if ($designDocName !== null && $viewName !== null) {
-            $designDoc = Modela_Doc_Design::getDesignDocInstance($designDocName);
-            $view = $designDoc->getView($viewName);
+            $view = Modela_View::getView($designDocName, $viewName);
             $defaultViewParams = $view->getDefaultParams();
             $mergedParams = self::_mergeParams($params, $defaultViewParams);
             $params = $mergedParams ? $mergedParams : null;
@@ -188,9 +187,12 @@ class Modela_Doc
         $rows = array();
         foreach ($response["rows"] as $row) {
             if ($docsOnly) {
-                $rows[] = self::processResponseArray($row["doc"]);
+                $rows[] = self::createDocFromResponse($row["doc"]);
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
+                if (method_exists($view, "callback")) {
+                    $row = $view->callback($row);
+                } 
                 foreach ($row as $key => $value) {
                     $doc->$key = $value;
                 }
@@ -205,7 +207,7 @@ class Modela_Doc
         return self::find($designDocName, $viewName, $params, true);
     }
     
-    public static function processResponseArray($response)
+    public static function createDocFromResponse($response)
     {
         $type = $response["type"];
         $className = ucfirst($type);
