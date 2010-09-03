@@ -1,0 +1,50 @@
+body {
+	margin: 0;
+	padding: 0;
+	color: #57534a;
+	font-family: Helvetica, Arial, sans-serif;
+	background-color: #dcdad4;
+}
+
+a {
+    color: #57534a;
+}
+
+#container {
+	width: 750px;
+	margin: 25px auto 0 auto;
+	text-align: center;
+}
+
+#content {
+	border-top: 2px solid #57534a;
+	text-align: left;
+}
+
+#content h2 {
+	margin: 0;
+	letter-spacing: -1px;
+    margin-top: 25px;
+    text-shadow: #ececec 2px 2px 1px;
+}
+
+#content p {
+	margin: 10px 0;
+}
+
+#content ul, 
+#content li {
+	margin: 10px 0;
+    padding: 0;
+}
+
+#content li {
+	margin-left: 20px;
+}
+
+#content pre {
+	background-color: #333;
+	color: #ececec;
+	padding: 0;
+	margin: 0;
+}
