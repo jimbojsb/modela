@@ -174,6 +174,9 @@ class Modela_Doc
         if ($designDocName !== null && $viewName !== null) {
             $view = Modela_View::getView($designDocName, $viewName);
             $defaultViewParams = $view->getDefaultParams();
+            if ($docsOnly) {
+                $params["include_docs"] = true;
+            }
             $mergedParams = self::_mergeParams($params, $defaultViewParams);
             $params = $mergedParams ? $mergedParams : null;
         }
