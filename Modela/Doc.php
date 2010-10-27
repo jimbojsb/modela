@@ -75,7 +75,7 @@ class Modela_Doc
         }
         $data = json_encode(array("docs" => $docStorage));
         $response = $core->doRequest($method, $uri, $data, true); 
-        if (count($resposne) == count($docs)) {
+        if (count($response) == count($docs)) {
             return true;
         }
     }
