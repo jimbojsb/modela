@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<p xmlns="http://pear.php.net/dtd/rest.package"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xsi:schemaLocation="http://pear.php.net/dtd/rest.package
+                       http://pear.php.net/dtd/rest.package.xsd"
+>
+ <n>Modela</n>
+ <c>modelaproject.com</c>
+ <ca xlink:href="/pear/rest/c/default">default</ca>
+ <l>...</l>
+ <s>Couch DB Framework</s>
+ <d>...</d>
+ <r xlink:href="/pear/rest/r/modela"/>
+</p>
