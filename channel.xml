@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<channel version="1.0"
+         xsi:schemaLocation="http://pear.php.net/channel-1.0
+                             http://pear.php.net/dtd/channel-1.0.xsd">
+	<name>modelaproject.com</name>
+	<summary>Modela PEAR Repository</summary>
+	<suggestedalias>modela</suggestedalias>
+	<servers>
+		<primary>
+			<rest>
+				<baseurl type="REST1.0">http://modelaproject.com/pear/rest/</baseurl>
+			</rest>
+		</primary>
+	</servers>
+</channel>
