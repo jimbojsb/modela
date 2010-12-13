@@ -1,8 +1,6 @@
 <?php
 class Modela_Loader
 {
-    const MODELA_FOLDER_VIEWS = 'views';
-    const MODELA_FOLDER_OBJECTS = 'objects';
     
     protected static $_instance;
     protected $_modelsPath;
@@ -33,33 +31,10 @@ class Modela_Loader
     public function loadModels($modelsPath)
     {       
         $this->_modelsPath = $modelsPath;
-
-        
-        
-        $viewsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_VIEWS;
-        $objectsFolder = $this->_modelsPath . "/" . self::MODELA_FOLDER_OBJECTS;
-        
-        $core = Modela_Core::getInstance();
-        
-        $di = new DirectoryIterator($viewsFolder);
+                
+        $di = new DirectoryIterator($modelsPath);
         foreach ($di as $file) {
-            if (!$file->isDot() && $file->isDir()) {
-                $designDoc = $file->getFilename();
-                $viewIterator = new DirectoryIterator($file->getPathname());
-                foreach ($viewIterator as $view) {
-                    if (!$view->isDot()) {
-                        $viewName = str_replace('.php', '', $view->getFilename());
-                        $core->registerView($designDoc, $viewName);
-                        require_once($view->getPathname());                    
-                    }
-
-                }
-            }
-        }
-        
-        $di = new DirectoryIterator($objectsFolder);
-        foreach ($di as $file) {
-            if (!$file->isDot()) {
+            if (!$file->isDot() && !$file->isDir()) {
                 $objectName = str_replace('.php', '', $file);
                 require_once($file->getPathname());
             }

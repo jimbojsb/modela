@@ -104,27 +104,6 @@ class Modela_Core
         return false;
     }
     
-    public function createViews()
-    {
-        foreach ($this->_views as $designDoc => $views) {
-            $doc = new Modela_Doc_Design();
-            $doc->_id = $designDoc;
-            foreach ($views as $view) {
-                $className = ucfirst($designDoc) . "_" . $view;
-                $obj = new $className;
-                $serializeable = $obj->getSerializable();
-                $doc->addView($view, $serializeable);                       
-            }
-            $docExists = Modela_Doc::get($doc->_id);
-            if ($docExists->_rev) {
-                $doc->_rev = $docExists->_rev;
-            }
-            $doc->save();
-            unset($docExists);
-            unset($view);
-        }
-    }
-    
     private function _sanitizeData($data)
     {
         $keys = array_keys($data);

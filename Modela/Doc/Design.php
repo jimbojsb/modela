@@ -23,7 +23,9 @@ class Modela_Doc_Design extends Modela_Doc
     
     public function __toString()
     {
-        $output = json_encode($this->_storage);
+        $vars = $this->_storage;
+        unset($vars['type']);
+        $output = json_encode($vars);
         return $output;
     }
 
