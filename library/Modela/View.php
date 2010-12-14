@@ -12,12 +12,19 @@ class Modela_View
      */
     public static function reloadViews($viewsPath)
     {
+        // iterate folders under the patht that contain map and reduce functions
+        // each folder becomes the name of a design document
         $diDesignDocs = new DirectoryIterator($viewsPath);
         foreach ($diDesignDocs as $diDesignDoc) {
+
+            // only process folders, ignore whatever else may be lying around
             if ($diDesignDoc->isDir() && !$diDesignDoc->isDot()) {
                 $designDoc = new Modela_Doc_Design();
                 $designDoc->_id = $diDesignDoc->getFilename();
                 $designDoc->language = "javascript";
+                
+                // iterate over the files within that folder, looking for *.map.js
+                // and *.reduce.js, storing what we find to a temporary array
                 $diComponents = new DirectoryIterator($diDesignDoc->getPathName());
                 $views = array();
                 foreach ($diComponents as $diComponent) {
@@ -32,6 +39,9 @@ class Modela_View
                         }
                     }
                 }
+                
+                // process the temporary array tha result from the file scan
+                // into proper Modela_View objects
                 foreach ($views as $view => $functions) {
                     $viewObj = new self();
                     foreach ($functions as $name => $code) {
@@ -39,6 +49,9 @@ class Modela_View
                     }
                     $designDoc->addView($view, $viewObj);
                 }
+                
+                // if the design doc already exists, get it's version number 
+                // so we can save over it
                 $docExists = Modela_Doc::get($designDoc->_id);
                 if ($docExists->_rev) {
                     $designDoc->_rev = $docExists->_rev;
