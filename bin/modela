@@ -1,0 +1,7 @@
+#!/usr/bin/env php
+<?php
+require_once 'Modela/Loader.php';
+$loader = Modela_Loader::getInstance();
+
+$cli = new Modela_Cli($argv);
+$cli->run();

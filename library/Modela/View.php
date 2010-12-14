@@ -10,7 +10,7 @@ class Modela_View
      * directory on disk that contains map and reduce javascript files
      * @param string $viewsPath
      */
-    public static function reloadViews($viewsPath)
+    public static function loadViews($viewsPath)
     {
         // iterate folders under the patht that contain map and reduce functions
         // each folder becomes the name of a design document

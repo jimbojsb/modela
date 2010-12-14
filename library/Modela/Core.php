@@ -3,12 +3,13 @@ class Modela_Core
 {
 
     const DEFAULT_COUCHDB_PORT = 5984;
+    const DEFAULT_COUCHDB_HOST = 'localhost';
     
     protected static $_instance;
   
     protected $_database;
     protected $_port = self::DEFAULT_COUCHDB_PORT;
-    protected $_hostname;
+    protected $_hostname = self::DEFAULT_COUCHDB_HOST;
     protected $_views;
     protected $_http;
     
