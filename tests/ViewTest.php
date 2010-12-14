@@ -1,5 +1,5 @@
 <?php
-require_once ('../Modela/View.php');
+require_once ('../library/Modela/View.php');
 class ViewTest extends PHPUnit_Framework_TestCase
 {
     public function testGetName()

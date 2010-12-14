@@ -1,9 +1,15 @@
 <?php
 class Modela_View
 {
+    // these are public properties to simplify json-ification to CouchDB's view specs
     public $map;
     public $reduce;
     
+    /**
+     * recreate / update view definitions given a well-structured
+     * directory on disk that contains map and reduce javascript files
+     * @param string $viewsPath
+     */
     public static function reloadViews($viewsPath)
     {
         $diDesignDocs = new DirectoryIterator($viewsPath);

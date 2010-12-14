@@ -1,6 +1,6 @@
 <?php
-require_once ('../Modela/Http.php');
-require_once ('../Modela/Exception.php');
+require_once ('../library/Modela/Http.php');
+require../library/Modela/Exception.phption.php');
 class HttpTest extends PHPUnit_Framework_TestCase
 {
     protected $http;

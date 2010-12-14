@@ -3,7 +3,7 @@ class Modela_Zend_Application_Resource_Modela extends Zend_Application_Resource_
 {
     public function init()
     {    
-        require_once('Modela/Loader.php');
+        require_once('../../../../library/Modela/Loader.php');
         $loader = Modela_Loader::getInstance();
         $loader->loadModels($this->_options['modelsPath']);
         

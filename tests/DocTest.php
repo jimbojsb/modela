@@ -1,7 +1,6 @@
 <?php
-require_once ('../Modela/Exception.php');
-require_once ('../Modela/Http.php');
-require_once ('../Modela/Response.php');
+require_once ('../library/Modela/Exception.php');
+require_once ('../library/Modela/Http.php');../library/Modela/Response.phpela/Response.php');
 require_once ('mocks/CoreMock.php');
 require_once ('mocks/ModelMock.php');
 class DocTest extends PHPUnit_Framework_TestCase
