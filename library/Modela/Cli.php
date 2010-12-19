@@ -21,6 +21,9 @@ class Modela_Cli
     
     public function run()
     {
+        if ($this->_options['database']) {
+            Modela_Core::getInstance()->setDatabase($this->_options['database']);
+        }
         switch ($this->_action) {
             case "loadviews":
                 if ($this->_options['viewspath']) {
