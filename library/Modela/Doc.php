@@ -193,7 +193,7 @@ class Modela_Doc
                 $rows[] = self::createDocFromResponse($row["doc"]);
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
-                if (method_exists($view, "callback")) {
+                if (method_exists($view, "resultsCallback")) {
                     $row = $view->callback($row);
                 } 
                 foreach ($row as $key => $value) {
@@ -208,6 +208,13 @@ class Modela_Doc
     public static function findDocs($designDocName = null, $viewName = null, $params = null)
     {
         return self::find($designDocName, $viewName, $params, true);
+    }
+    
+    public static function findOne($designDocName = null, $viewName = null, $params = null, $docsOnly = true)
+    {
+        $params['limit'] = 1;
+        $docs = self::find($designDocName, $viewName, $params, $docsOnly);
+        return $docs[0];
     }
     
     public static function createDocFromResponse($response)

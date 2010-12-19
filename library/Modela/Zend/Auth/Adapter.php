@@ -10,9 +10,8 @@ class Modela_Zend_Auth_Adapter implements Zend_Auth_Adapter_Interface
     
     public function authenticate()
     {
-        $user = Modela_Doc::find($this->_designDoc, $this->_view, array("key" => $this->_identityValue), true);
+        $user = Modela_Doc::findOne($this->_designDoc, $this->_view, array("key" => $this->_identityValue), true);
         if ($user) {
-            $user = array_shift($user);
             if ($this->_passwordIsValid($user)) {
                 $result = new Zend_Auth_Result(Zend_Auth_Result::SUCCESS, $user, array());                
             } else {

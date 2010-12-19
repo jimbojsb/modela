@@ -63,17 +63,18 @@ class Modela_Core
         $http = $this->_http;
         $http->setMethod($method);
 
-        $uri = $this->getBaseUrl($isDatabaseRequest);
+        $baseUri = $this->getBaseUrl($isDatabaseRequest);
+        $realUri = $baseUri . $uri;
         
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
             $data = self::sanitizeData($data);
             $queryString = http_build_query($data);
-            $uri .= "?" . $queryString;
+            $realUri .= "?" . $queryString;
         }
         
-        $http->setUri($uri);
+        $http->setUri($realUri);
         $response = $http->request();
         if ($response) {
             $decodedResponse = json_decode($response, true);

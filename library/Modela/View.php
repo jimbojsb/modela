@@ -5,6 +5,15 @@ class Modela_View
     public $map;
     public $reduce;
     
+    protected $_defaultParams;
+    
+    protected static $_viewRegistry = array();
+    
+    public function getDefaultParams()
+    {
+        return $this->_defaultParams;
+    }
+    
     /**
      * recreate / update view definitions given a well-structured
      * directory on disk that contains map and reduce javascript files
@@ -60,4 +69,19 @@ class Modela_View
             }
         }
     }    
+    
+    public static function getView($designDocName, $viewName)
+    {
+        if (isset(self::$_viewRegistry[$designDocName][$viewName])) {
+            return self::$_viewRegistry[$designDocName][$viewName];
+        }
+        $loader = Modela_Loader::getInstance();
+        $loader->loadView($designDocName, $viewName);
+        $className = str_replace('_', ' ', "$designDocName $viewName");
+        $className = ucwords($className);
+        $className = str_replace(' ', '_', $className);
+        $class = new $className();
+        self::$_viewRegistry[$designDocName][$viewName] = $class;
+        return $class;
+    }
 }

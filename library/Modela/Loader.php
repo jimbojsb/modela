@@ -40,4 +40,14 @@ class Modela_Loader
             }
         }
     }
+    
+    public function loadView($designDocName, $viewName)
+    {
+        if (!$this->_modelsPath) {
+            return false;
+        }
+        $path = $this->_modelsPath . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $designDocName . DIRECTORY_SEPARATOR . $viewName . '.php';
+        require_once($path);
+        return true;
+    }
 }
