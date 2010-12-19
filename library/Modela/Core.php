@@ -43,21 +43,6 @@ class Modela_Core
     {
         $this->_database = $database;
     }
-   
-    public function registerView($designDoc, $viewName)
-    {
-        $this->_views[$designDoc][] = $viewName;
-    }
-    
-    public function getDesignDocs()
-    {
-        return $this->_designDocs;
-    }
-    
-    public function getDesignDoc($name)
-    {
-        return $this->_designDocs[$name];
-    }
     
     public function setHttp(Modela_Http $http)
     {
@@ -78,26 +63,20 @@ class Modela_Core
         $http = $this->_http;
         $http->setMethod($method);
 
-        if ($isDatabaseRequest) {
-            $uri = '/' . $this->_database . $uri;
-        }
-        
-        $realUri = 'http://' . $this->_hostname . ':' . $this->_port . $uri; 
-
+        $uri = $this->getBaseUrl($isDatabaseRequest);
         
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
-            $data = self::_sanitizeData($data);
+            $data = self::sanitizeData($data);
             $queryString = http_build_query($data);
-            $realUri .= "?" . $queryString;
+            $uri .= "?" . $queryString;
         }
         
-        $http->setUri($realUri);
+        $http->setUri($uri);
         $response = $http->request();
         if ($response) {
             $decodedResponse = json_decode($response, true);
-            
             if ($decodedResponse) {
                 return $decodedResponse;
             }
@@ -105,7 +84,7 @@ class Modela_Core
         return false;
     }
     
-    private function _sanitizeData($data)
+    public static function sanitizeData($data)
     {
         $keys = array_keys($data);
         $vals = array_values($data);
