@@ -31,7 +31,7 @@ class Modela_View
                     if ($diComponent->isFile()) {
                         $filename = $diComponent->getFilename();
                         $parts = explode('.', $filename);
-                        $viewName = $parts[0];
+                        $viewName = strtolower($parts[0]);
                         if (strpos($filename, '.map.js')) {
                             $views[$viewName]["map"] = file_get_contents($diComponent->getPathName());    
                         } else if (strpos($filename, '.reduce.js')) {
