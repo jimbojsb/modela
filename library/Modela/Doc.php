@@ -173,7 +173,11 @@ class Modela_Doc
         
         if ($designDocName !== null && $viewName !== null) {
             $view = Modela_View::getView($designDocName, $viewName);
-            $defaultViewParams = $view->getDefaultParams();
+            if ($view) {
+                $defaultViewParams = $view->getDefaultParams();
+            } else {
+                $defaultViewParams = array();
+            }
             if ($docsOnly) {
                 $params["include_docs"] = true;
             }
@@ -193,8 +197,10 @@ class Modela_Doc
                 $rows[] = self::createDocFromResponse($row["doc"]);
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
-                if (method_exists($view, "resultsCallback")) {
-                    $row = $view->callback($row);
+                if ($view) {
+                    if (method_exists($view, "resultsCallback")) {
+                        $row = $view->callback($row);
+                    }
                 } 
                 foreach ($row as $key => $value) {
                     $doc->$key = $value;

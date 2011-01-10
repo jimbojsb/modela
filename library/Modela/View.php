@@ -76,12 +76,16 @@ class Modela_View
             return self::$_viewRegistry[$designDocName][$viewName];
         }
         $loader = Modela_Loader::getInstance();
-        $loader->loadView($designDocName, $viewName);
-        $className = str_replace('_', ' ', "$designDocName $viewName");
-        $className = ucwords($className);
-        $className = str_replace(' ', '_', $className);
-        $class = new $className();
-        self::$_viewRegistry[$designDocName][$viewName] = $class;
-        return $class;
+        $loaded = $loader->loadView($designDocName, $viewName);
+        if ($loaded) {
+            $className = str_replace('_', ' ', "$designDocName $viewName");
+            $className = ucwords($className);
+            $className = str_replace(' ', '_', $className);
+            $class = new $className();
+            self::$_viewRegistry[$designDocName][$viewName] = $class;
+            return $class;
+        } else {
+            return false;
+        }
     }
 }
