@@ -47,7 +47,10 @@ class Modela_Loader
             return false;
         }
         $path = $this->_modelsPath . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . $designDocName . DIRECTORY_SEPARATOR . $viewName . '.php';
-        require_once($path);
-        return true;
+        if (file_exists($path)) {
+            require_once($path);
+            return true;
+        }
+        return false;
     }
 }
