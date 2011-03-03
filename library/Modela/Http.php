@@ -14,6 +14,8 @@ class Modela_Http
     protected $_headers;
     protected $_response;
     protected $_debugMode = true;
+    protected $_username;
+    protected $_password;
     
     public function __construct($uri = null) 
     {
@@ -40,7 +42,7 @@ class Modela_Http
         if ($uri === null) {
             throw new Modela_Exception("uri is not valid");
         }
-        $uriParts = parse_url($uri);
+        $uriParts = @parse_url($uri);
         if (!(isset($uriParts['path']) &&
               isset($uriParts['host']) &&
               isset($uriParts['scheme']))) {
@@ -55,6 +57,15 @@ class Modela_Http
         $this->_data = $data;   
     }
     
+    public function setUsername($username)
+    {
+        $this->_username = $username;
+    }
+    
+    public function setPassword($password)
+    {
+        $this->_password = $password;
+    }
     
     public function request()
     {
