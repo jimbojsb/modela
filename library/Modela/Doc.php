@@ -3,9 +3,10 @@ class Modela_Doc
 {
     protected $_storage = array();
 
-    public function __construct(Array $data = null)
+    public function __construct($data = null)
     {
         if ($data !== null) {
+            $data = get_object_vars($data);
             foreach ($data as $key => $val) {
                 $this->set($key, $val);
             }
@@ -167,29 +168,26 @@ class Modela_Doc
     }
     
     public static function find($designDocName = null, $viewName = null, $params = null, $docsOnly = false)
-    {        
+    {
         $uri = '/';
         $core = Modela_Core::getInstance();
-        
         if ($designDocName !== null && $viewName !== null) {
-            $view = Modela_View::getView($designDocName, $viewName);
-            if ($view) {
-                $defaultViewParams = $view->getDefaultParams();
-            } else {
-                $defaultViewParams = array();
+            if ($params !== null && !is_array($params)) {
+                $key = $params;
+                $params = array();
+                $params['key'] = $key;
             }
             if ($docsOnly) {
                 $params["include_docs"] = true;
             }
-            $mergedParams = self::_mergeParams($params, $defaultViewParams);
-            $params = $mergedParams ? $mergedParams : null;
         }
-        
+
         if ($params === null && $designDocName === null && $viewName === null) {
             $uri .= '_all_docs';
         } else {
             $uri .= '_design/' . $designDocName . '/_view/' . $viewName;
         }
+
         $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, $params, true);
         $rows = array();
         foreach ($response["rows"] as $row) {
@@ -197,11 +195,6 @@ class Modela_Doc
                 $rows[] = self::createDocFromResponse($row["doc"]);
             } else if ($row["key"]) {
                 $doc = new Modela_Response();
-                if ($view) {
-                    if (method_exists($view, "resultsCallback")) {
-                        $row = $view->callback($row);
-                    }
-                } 
                 foreach ($row as $key => $value) {
                     $doc->$key = $value;
                 }
@@ -218,6 +211,11 @@ class Modela_Doc
     
     public static function findOne($designDocName = null, $viewName = null, $params = null, $docsOnly = true)
     {
+        if ($params !== null && !is_array($params)) {
+            $key = $params;
+            $params = array();
+            $params['key'] = $key;
+        }
         $params['limit'] = 1;
         $docs = self::find($designDocName, $viewName, $params, $docsOnly);
         return $docs[0];
@@ -225,7 +223,7 @@ class Modela_Doc
     
     public static function createDocFromResponse($response)
     {
-        $type = $response["type"];
+        $type = $response->type;
         $className = ucfirst($type);
         if (!$className) {
             $className = "Modela_Doc";
@@ -240,17 +238,5 @@ class Modela_Doc
         $url = $core->getBaseUrl(true);
         $url .= '/' . $this->_id . '/' . $attachmentFilename;
         return $url;
-    }
-    
-    private static function _mergeParams($passedParams, $defaultViewParams)
-    {
-        $newParams = $defaultViewParams;
-        if (!$passedParams) {
-            return $newParams;
-        }
-        foreach ($passedParams as $key => $val) {
-            $newParams[$key] = $val;
-        }
-        return $newParams;
     }
 }

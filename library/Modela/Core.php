@@ -77,7 +77,6 @@ class Modela_Core
 
         $baseUri = $this->getBaseUrl($isDatabaseRequest);
         $realUri = $baseUri . $uri;
-        
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
@@ -85,7 +84,7 @@ class Modela_Core
             $queryString = http_build_query($data);
             $realUri .= "?" . $queryString;
         }
-        
+
         $http->setUri($realUri);
         if ($this->_username && $this->_password) {
             $http->setUsername($this->_username);
@@ -93,7 +92,7 @@ class Modela_Core
         }
         $response = $http->request();
         if ($response) {
-            $decodedResponse = json_decode($response, true);
+            $decodedResponse = json_decode($response);
             if ($decodedResponse) {
                 return $decodedResponse;
             }
