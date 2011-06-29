@@ -25,7 +25,7 @@ class Modela_Zend_Auth_Adapter implements Zend_Auth_Adapter_Interface
     
     protected function _passwordIsValid($user)
     {
-        $sentPassword = md5($this->_passwordValue);
+        $sentPassword = sha1($this->_passwordValue);
         if ($sentPassword == $user->{$this->_passwordField}) {
             return true;
         }

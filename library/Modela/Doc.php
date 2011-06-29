@@ -8,10 +8,12 @@ class Modela_Doc
         if ($data !== null) {
             $data = get_object_vars($data);
             foreach ($data as $key => $val) {
-                $this->set($key, $val);
+                $this->setStorageValue($key, $val);
             }
         }
-        $this->type = strtolower(get_class($this));
+        if (!$this->type) {
+            $this->type = strtolower(get_class($this));
+        }
     }
     
     public function __get($key)
@@ -29,16 +31,21 @@ class Modela_Doc
         if (method_exists($this, $setterOverrideName)) {
             return $this->$setterOverrideName($value);
         }
-        $this->set($key, $value);
+        $this->setStorageValue($key, $value);
     }
     
-    public function set($key, $value)
+    public function setStorageValue($key, $value)
     {
         if ($value === null) {
             unset($this->_storage[$key]);
         } else {
             $this->_storage[$key] = $value;
         }
+    }
+
+    public function getStorageValue($key)
+    {
+        return $this->_storage[$key];
     }
     
     public function save($refreshIfNeeded = false)
@@ -51,10 +58,10 @@ class Modela_Doc
         $uri .= $this->_id;
         $core = Modela_Core::getInstance();
         $response = $core->doRequest($method, $uri, $this->__toString(), true); 
-        if ($response["ok"] === true) {
-            $this->_rev = $response["rev"];
+        if ($response->ok === true) {
+            $this->_rev = $response->rev;
             return true;
-        } else if ($response["error"] == 'conflict' && $refreshIfNeeded) {
+        } else if ($response->error == 'conflict' && $refreshIfNeeded) {
             $doc = self::get($this->_id);
             $this->_rev = $doc->_rev;
             $this->save();
@@ -120,7 +127,7 @@ class Modela_Doc
     
     public function removeAttachments()
     {
-        $this->set('_attachments', null);
+        $this->setStorageValue('_attachments', null);
     }
     
     public function addAttachment($filename, $rawData, $contentType = null)
@@ -130,7 +137,7 @@ class Modela_Doc
         $newAttachment['data'] = base64_encode($rawData);
         $newAttachment['content_type'] = $contentType;
         $attachments[$filename] = $newAttachment;
-        $this->set("_attachments", $attachments);
+        $this->setStorageValue("_attachments", $attachments);
     }
     
     public function generateId()
@@ -190,11 +197,12 @@ class Modela_Doc
 
         $response = $core->doRequest(Modela_Http::METHOD_GET, $uri, $params, true);
         $rows = array();
-        foreach ($response["rows"] as $row) {
+        foreach ($response->rows as $row) {
             if ($docsOnly) {
-                $rows[] = self::createDocFromResponse($row["doc"]);
-            } else if ($row["key"]) {
+                $rows[] = self::createDocFromResponse($row->doc);
+            } else {
                 $doc = new Modela_Response();
+                $row = get_object_vars($row);
                 foreach ($row as $key => $value) {
                     $doc->$key = $value;
                 }
@@ -208,7 +216,13 @@ class Modela_Doc
     {
         return self::find($designDocName, $viewName, $params, true);
     }
-    
+
+    public static function getValue($designDocName, $viewName, $key)
+    {
+        $doc = self::findOne($designDocName, $viewName, $key, false);
+        return $doc->value;
+    }
+
     public static function findOne($designDocName = null, $viewName = null, $params = null, $docsOnly = true)
     {
         if ($params !== null && !is_array($params)) {
@@ -224,7 +238,7 @@ class Modela_Doc
     public static function createDocFromResponse($response)
     {
         $type = $response->type;
-        $className = ucfirst($type);
+        $className = str_replace(' ', '', ucwords(str_replace('-', '', $type)));
         if (!$className) {
             $className = "Modela_Doc";
         }
