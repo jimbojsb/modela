@@ -6,5 +6,16 @@
         <name>http://mode.la</name>
     </author>
 
-
+    <entry>
+        <title>Modela 0.2.2 (beta)</title>
+        <link href="http://mode.la/get/Modela-0.2.2.tgz" />
+        <id>Modela-0.2.2</id>
+        <author>
+            <name>jimbojsb</name>
+        </author>
+        <updated>2011-07-11T04:34:33-05:00</updated>
+        <content>
+            Modela is an access and modeling framework for CouchDB
+        </content>
+    </entry>
 </feed>
