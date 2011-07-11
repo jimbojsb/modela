@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<server>
+<name>mode.la</name>
+<summary>Modela's PEAR Channel Server</summary>
+<alias>modela</alias>
+<url>http://mode.la</url>
+</server>
