@@ -36,7 +36,7 @@ class Modela_Doc_Design extends Modela_Doc
         // remove the type that is autmatically generated
         // on construct because it isn't part of the standard
         // CouchDB view spec. Do this here because it's not easy
-        // to unset properties with magic getters and settersin play
+        // to unset properties with magic getters and setters in play
         $vars = $this->_storage;
         unset($vars['type']);
         

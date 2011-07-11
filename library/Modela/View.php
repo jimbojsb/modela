@@ -4,16 +4,7 @@ class Modela_View
     // these are public properties to simplify json-ification to CouchDB's view specs
     public $map;
     public $reduce;
-    
-    protected $_defaultParams;
-    
-    protected static $_viewRegistry = array();
-    
-    public function getDefaultParams()
-    {
-        return $this->_defaultParams;
-    }
-    
+
     /**
      * recreate / update view definitions given a well-structured
      * directory on disk that contains map and reduce javascript files
@@ -21,71 +12,32 @@ class Modela_View
      */
     public static function loadViews($viewsPath)
     {
-        // iterate folders under the patht that contain map and reduce functions
-        // each folder becomes the name of a design document
-        $diDesignDocs = new DirectoryIterator($viewsPath);
-        foreach ($diDesignDocs as $diDesignDoc) {
-
-            // only process folders, ignore whatever else may be lying around
-            if ($diDesignDoc->isDir() && !$diDesignDoc->isDot()) {
-                $designDoc = new Modela_Doc_Design();
-                $designDoc->_id = $diDesignDoc->getFilename();
-                $designDoc->language = "javascript";
-                
-                // iterate over the files within that folder, looking for *.map.js
-                // and *.reduce.js, storing what we find to a temporary array
-                $diComponents = new DirectoryIterator($diDesignDoc->getPathName());
-                $views = array();
-                foreach ($diComponents as $diComponent) {
-                    if ($diComponent->isFile()) {
-                        $filename = $diComponent->getFilename();
-                        $parts = explode('.', $filename);
-                        $viewName = strtolower($parts[0]);
-                        if (strpos($filename, '.map.js')) {
-                            $views[$viewName]["map"] = file_get_contents($diComponent->getPathName());    
-                        } else if (strpos($filename, '.reduce.js')) {
-                            $views[$viewName]["reduce"] = file_get_contents($diComponent->getPathName());      
-                        }
-                    }
-                }
-                
-                // process the temporary array tha result from the file scan
-                // into proper Modela_View objects
-                foreach ($views as $view => $functions) {
-                    $viewObj = new self();
-                    foreach ($functions as $name => $code) {
-                        $viewObj->$name = $code;
-                    }
-                    $designDoc->addView($view, $viewObj);
-                }
-                
-                // if the design doc already exists, get it's version number 
-                // so we can save over it
-                $docExists = Modela_Doc::get($designDoc->_id);
-                if ($docExists->_rev) {
-                    $designDoc->_rev = $docExists->_rev;
-                }
-                $designDoc->save();
+        $viewData = array();
+        $files = new DirectoryIterator($viewsPath);
+        foreach ($files as $file) {
+            if ($file->isFile()) {
+                $parts = explode('.', $file->getFilename());
+                $view = $parts[1];
+                $designDoc = $parts[0];
+                $content = file_get_contents($file->getPathName());
+                $contentType = $parts[2];
+                $viewData[$designDoc][$view][$contentType] = $content;
             }
         }
+        foreach ($viewData as $designDoc => $views) {
+            $dd = new Modela_Doc_Design();
+            $dd->_id = $designDoc;
+            foreach ($views as $viewName => $functions) {
+                $v = new Modela_View();
+                $v->map = $functions['map'];
+                $v->reduce = $functions['reduce'];
+                $dd->addView($viewName, $v);
+            }
+            $docExists = Modela_Doc::get($dd->_id);
+            if ($docExists) {
+                $dd->_rev = $docExists->_rev;
+            }
+            $dd->save();
+        }
     }    
-    
-    public static function getView($designDocName, $viewName)
-    {
-        if (isset(self::$_viewRegistry[$designDocName][$viewName])) {
-            return self::$_viewRegistry[$designDocName][$viewName];
-        }
-        $loader = Modela_Loader::getInstance();
-        $loaded = $loader->loadView($designDocName, $viewName);
-        if ($loaded) {
-            $className = str_replace('_', ' ', "$designDocName $viewName");
-            $className = ucwords($className);
-            $className = str_replace(' ', '_', $className);
-            $class = new $className();
-            self::$_viewRegistry[$designDocName][$viewName] = $class;
-            return $class;
-        } else {
-            return false;
-        }
-    }
 }

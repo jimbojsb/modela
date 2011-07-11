@@ -12,6 +12,8 @@ class Modela_Core
     protected $_hostname = self::DEFAULT_COUCHDB_HOST;
     protected $_views;
     protected $_http;
+    protected $_username;
+    protected $_password;
     
     /**
      * 
@@ -44,6 +46,16 @@ class Modela_Core
         $this->_database = $database;
     }
     
+    public function setUsername($username)
+    {
+        $this->_username = $username;
+    }
+    
+    public function setPassword($password)
+    {
+        $this->_password = $password;
+    }
+    
     public function setHttp(Modela_Http $http)
     {
         $this->_http = $http;
@@ -65,7 +77,6 @@ class Modela_Core
 
         $baseUri = $this->getBaseUrl($isDatabaseRequest);
         $realUri = $baseUri . $uri;
-        
         if ($method == Modela_Http::METHOD_POST || $method == Modela_Http::METHOD_PUT) {
             $http->setData($data);
         } else if ($method == Modela_Http::METHOD_GET && is_array($data)) {
@@ -73,11 +84,15 @@ class Modela_Core
             $queryString = http_build_query($data);
             $realUri .= "?" . $queryString;
         }
-        
+
         $http->setUri($realUri);
+        if ($this->_username && $this->_password) {
+            $http->setUsername($this->_username);
+            $http->setPassword($this->_password);
+        }
         $response = $http->request();
         if ($response) {
-            $decodedResponse = json_decode($response, true);
+            $decodedResponse = json_decode($response);
             if ($decodedResponse) {
                 return $decodedResponse;
             }
