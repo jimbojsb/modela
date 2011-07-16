@@ -42,7 +42,7 @@
 # pear install modela/Modela-0.2.2</pre>
             </p>
             <hr/>
-            <h2>Usage</h2>
+            <h2>Configuring Modela for your project</h2>
             <p>Modela is easy to integrate into your project. The first step is getting a connection set up. Modela has
                a "Core" (Modela_Core) object that manages connection information and handles the dispatching of
                requests. As CouchDB uses HTTP as it's transport protocol, Modela_Core doesn't actually need to maintain
@@ -63,10 +63,35 @@
 pluginPaths.Modela_Zend_Application_Resource = "Modela/Zend/Application/Resource"
 resources.modela.hostname = [hostname]
 resources.modela.database = [databasename]
-resources.modela.modelsPath = [path to model classes, optional]
-            </pre>
-            <h3>Retrieving documents</h3>
-            
+resources.modela.modelsPath = [path to model classes, optional]</pre>
+            <hr>
+            <h2>Retrieving documents</h2>
+            <p>Modela has 3 core classes that handle handle interactions with CouchDB. Modela_Core handles requests.
+               Modela_Doc is used to as a base class for your domain objects (if you choose), or as a generic class
+               that represents documents stored in CouchDB. Modela_Response is a generic object that is used to handle
+               responses from CouchDB that are not documents. (View, server operations, etc)
+            </p>
+            <h3>Fetching documents by ID</h3>
+            <pre>
+&lt;?php
+    $document = Modela_Doc::get('mydoc1');
+?&gt;</pre>
+            <h3>Querying Views</h3>
+            <pre>
+&lt;?php
+    // $params is an array that will be used to generate the HTTP query string
+    // If you pass a string for $params, Modela will assume that string is to
+    //be used as the key
+    $params = array("key" => "myDoc");
+    $docs = Modela_Doc::find('myDesignDoc', 'myView', $params);
+?&gt;</pre>
+            <h3>Querying Views - Finding a single document</h3>
+            <p>Modela_Doc::findOne() is a convenience wrapper around Modela_Doc::find(). It implies ?limit=1&include_docs=true.
+               You cannot change the limit here, but the last parameter is optional and toggles include_docs</p>
+            <pre>
+&lt;?php
+    $myDoc = Modela_Doc::findOne('myDesignDoc', 'myView', $params);
+?&gt;</pre>
         </div>
     </div>
 <script type="text/javascript">
