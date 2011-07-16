@@ -3,7 +3,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<title>Modela - A CouchDB Framework in PHP</title>
+	<title>Modela - A CouchDB Framework
+        <for></for> PHP</title>
 	<link rel="stylesheet" type="text/css" href="styles.css"/>
     <link rel="icon" href="favicon.ico"/>
 </head>
@@ -13,31 +14,73 @@
     <div id="container">
         <img src="modelasite.png" alt="Modela PHP CouchDB Framework"/>
         <div id="content">
+            <a href="http://github.com/jimbojsb/Modela"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://gs1.wac.edgecastcdn.net/80460E/assets/img/71eeaab9d563c2b3c590319b398dd35683265e85/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub"></a>
             <h2>What is Modela?</h2>
-            <p>Modela is an Object-to-Document Mapper for PHP and CouchDB. Modela allows you to build a domain model with PHP objects and persist them as documents in CouchDB.</p>
+            <p>Modela is an abject-oriented CouchDB client for PHP. It provides both basic connection and querying features and base objects that can be used for building domain models.</p>
             <img id="couch-logo" src="couchdb-logo.png" alt=""/>
             <h2>What features does Modela Have?</h2>
             <ul>
-                <li>Extremely light-weight HTTP access to CouchDB via raw PHP sockets</li>
+                <li>Light-weight HTTP layer </li>
                 <li>Extensible document base class for creating models</li>
                 <li>Autoloading of classes that won't conflict with other libraries</li>
-                <li>Robust API for defining and querying map-reduce views</li>
-                <li>Zend Framework application resource plugin</li>
-                <li>Zend Framework authentication adapter</li>
-                <li>Much more</li>
+                <li>Command line tools for managing view definitions</li>
+                <li>Zend Framework plugins for bootstrapping and authentication</li>
             </ul>
-            
+            <h2>What's New - Version 0.2.2</h2>
+            <ul>
+                <li>Moved PEAR channel from Pearhub to Github</li>
+                <li>Updated view management tools</li>
+                <li>Fixed bugs with hyrdating nested objects</li>
+            </ul>
+            <hr/>
             <h2>Where and how do I get it?</h2>
-            <p>Modela is hosted and maintained on GitHub. You can <a href="http://github.com/jimbjsb/Modela">download the latest source version</a> directly from GitHub if you like.</p>
-            <p>
-                The preferred method for getting Modela is to install via PEAR. You can install Modela as follows:
+            <p>Modela is hosted and maintained on GitHub. You can <a href="http://github.com/jimbjsb/Modela">download
+               the latest source version</a> directly from GitHub if you like. The preferred method for getting Modela
+               is to install via PEAR. You can install Modela as follows:
                 <pre>
 # pear channel-discover mode.la
-# pear install modela/Modela-0.2.2
-                </pre>
+# pear install modela/Modela-0.2.2</pre>
             </p>
+            <hr/>
+            <h2>Usage</h2>
+            <p>Modela is easy to integrate into your project. The first step is getting a connection set up. Modela has
+               a "Core" (Modela_Core) object that manages connection information and handles the dispatching of
+               requests. As CouchDB uses HTTP as it's transport protocol, Modela_Core doesn't actually need to maintain
+               any connections. It simply holds the information for use when making individual HTTP requests.</p>
+            <h3>Configure Modela_Core</h3>
+            <pre>
+&lt;?php
+    $modela = Modela_Core::getInstance();
+    $modela->setHostname('localhost');
+    $modela->setDatabase('myapp');
+?&gt;</pre>
+            <h3>Zend Framework Bootstrap Resource</h3>
+            <p>For Zend Framework applications that are using Zend_Application, Modela inludes a bootstrap resource that
+            allows you to configure Modela from your application.ini. This assumes you installed Modela via PEAR, but
+            as long as Modela is on your include_path, it should work. All you have to do is add the following lines to
+            your application.ini</p>
+            <pre>
+pluginPaths.Modela_Zend_Application_Resource = "Modela/Zend/Application/Resource"
+resources.modela.hostname = [hostname]
+resources.modela.database = [databasename]
+resources.modela.modelsPath = [path to model classes, optional]
+            </pre>
+            <h3>Retrieving documents</h3>
             
         </div>
     </div>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-510084-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
 </body>
 </html>
