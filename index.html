@@ -1,111 +1,50 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<title>Modela - A CouchDB Framework
-        <for></for> PHP</title>
-	<link rel="stylesheet" type="text/css" href="styles.css"/>
-    <link rel="icon" href="favicon.ico"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Modela's PEAR Channel Server</title>
+    <link rel="stylesheet" type="text/css" href="http://mode.la/pirum.css" />
+    <link rel="alternate" type="application/rss+xml" href="http://mode.la/feed.xml" title="Modela's PEAR Channel Server Latest Releases" />
 </head>
-
-
 <body>
-    <div id="container">
-        <img src="modelasite.png" alt="Modela PHP CouchDB Framework"/>
-        <div id="content">
-            <a href="http://github.com/jimbojsb/Modela"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://gs1.wac.edgecastcdn.net/80460E/assets/img/71eeaab9d563c2b3c590319b398dd35683265e85/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67" alt="Fork me on GitHub"></a>
-            <h2>What is Modela?</h2>
-            <p>Modela is an abject-oriented CouchDB client for PHP. It provides both basic connection and querying features and base objects that can be used for building domain models.</p>
-            <img id="couch-logo" src="couchdb-logo.png" alt=""/>
-            <h2>What features does Modela Have?</h2>
-            <ul>
-                <li>Light-weight HTTP layer </li>
-                <li>Extensible document base class for creating models</li>
-                <li>Autoloading of classes that won't conflict with other libraries</li>
-                <li>Command line tools for managing view definitions</li>
-                <li>Zend Framework plugins for bootstrapping and authentication</li>
-            </ul>
-            <h2>What's New - Version 0.2.2</h2>
-            <ul>
-                <li>Moved PEAR channel from Pearhub to Github</li>
-                <li>Updated view management tools</li>
-                <li>Fixed bugs with hyrdating nested objects</li>
-            </ul>
-            <hr/>
-            <h2>Where and how do I get it?</h2>
-            <p>Modela is hosted and maintained on GitHub. You can <a href="http://github.com/jimbjsb/Modela">download
-               the latest source version</a> directly from GitHub if you like. The preferred method for getting Modela
-               is to install via PEAR. You can install Modela as follows:
-                <pre>
-# pear channel-discover mode.la
-# pear install modela/Modela-0.2.2</pre>
-            </p>
-            <hr/>
-            <h2>Configuring Modela for your project</h2>
-            <p>Modela is easy to integrate into your project. The first step is getting a connection set up. Modela has
-               a "Core" (Modela_Core) object that manages connection information and handles the dispatching of
-               requests. As CouchDB uses HTTP as it's transport protocol, Modela_Core doesn't actually need to maintain
-               any connections. It simply holds the information for use when making individual HTTP requests.</p>
-            <h3>Configure Modela_Core</h3>
-            <pre>
-&lt;?php
-    $modela = Modela_Core::getInstance();
-    $modela->setHostname('localhost');
-    $modela->setDatabase('myapp');
-?&gt;</pre>
-            <h3>Zend Framework Bootstrap Resource</h3>
-            <p>For Zend Framework applications that are using Zend_Application, Modela inludes a bootstrap resource that
-            allows you to configure Modela from your application.ini. This assumes you installed Modela via PEAR, but
-            as long as Modela is on your include_path, it should work. All you have to do is add the following lines to
-            your application.ini</p>
-            <pre>
-pluginPaths.Modela_Zend_Application_Resource = "Modela/Zend/Application/Resource"
-resources.modela.hostname = [hostname]
-resources.modela.database = [databasename]
-resources.modela.modelsPath = [path to model classes, optional]</pre>
-            <hr>
-            <h2>Retrieving documents</h2>
-            <p>Modela has 3 core classes that handle handle interactions with CouchDB. Modela_Core handles requests.
-               Modela_Doc is used to as a base class for your domain objects (if you choose), or as a generic class
-               that represents documents stored in CouchDB. Modela_Response is a generic object that is used to handle
-               responses from CouchDB that are not documents. (View, server operations, etc)
-            </p>
-            <h3>Fetching documents by ID</h3>
-            <pre>
-&lt;?php
-    $document = Modela_Doc::get('mydoc1');
-?&gt;</pre>
-            <h3>Querying Views</h3>
-            <pre>
-&lt;?php
-    // $params is an array that will be used to generate the HTTP query string
-    // If you pass a string for $params, Modela will assume that string is to
-    //be used as the key
-    $params = array("key" => "myDoc");
-    $docs = Modela_Doc::find('myDesignDoc', 'myView', $params);
-?&gt;</pre>
-            <h3>Querying Views - Finding a single document</h3>
-            <p>Modela_Doc::findOne() is a convenience wrapper around Modela_Doc::find(). It implies ?limit=1&include_docs=true.
-               You cannot change the limit here, but the last parameter is optional and toggles include_docs</p>
-            <pre>
-&lt;?php
-    $myDoc = Modela_Doc::findOne('myDesignDoc', 'myView', $params);
-?&gt;</pre>
+    <div id="doc" class="yui-t7">
+        <div id="hd">
+            <h1>Modela's PEAR Channel Server</h1>
+        </div>
+        <div id="bd">
+            <div class="yui-g">
+                <h2>Using this Channel</h2>
+                <p>This channel is to be used with the PEAR installer.</p>
+                <em>Registering</em> the channel:
+                <pre><code>pear channel-discover mode.la</code></pre>
+                <em>Listing</em> available packages:
+                <pre><code>pear remote-list -c modela</code></pre>
+                <em>Installing</em> a package:
+                <pre><code>pear install modela/package_name</code></pre>
+                <em>Installing</em> a specific version/stability:
+                <pre><code>pear install modela/package_name-1.0.0
+pear install modela/package_name-beta</code></pre>
+                <em>Receiving</em> updates via a <a href="http://mode.la/feed.xml">feed</a>:
+                <pre><code>http://mode.la/feed.xml</code></pre>
+
+                <h2>Packages</h2>
+
+                                    <h3>Modela<small> - Modela - CouchDB Framework</small></h3>
+                    <p>Modela is a data modeling and access layer for CouchDB.</p>
+                    <ul>
+                        <li><strong>Package name</strong>: Modela</li>
+                        <li><strong>License</strong>: BSD Style</li>
+                                                <li><strong>Maintainers</strong>: Josh Butts (as lead)</li>
+                                                <li><strong>Releases</strong>: <a href="http://mode.la/get/Modela-0.2.3.tgz">0.2.3</a> (alpha), <a href="http://mode.la/get/Modela-0.2.2.tgz">0.2.2</a> (beta)</li>
+                        <li><strong>Install command</strong>: pear install modela/Modela</li>
+                    </ul>
+
+                    <hr />
+                            </div>
+        </div>
+        <div id="ft">
+            <p><small>The <em>mode.la</em> PEAR Channel Server is proudly powered by <a href="http://www.pirum-project.org/">Pirum</a> 1.0.1</small></p>
         </div>
     </div>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-510084-4']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
 </body>
 </html>

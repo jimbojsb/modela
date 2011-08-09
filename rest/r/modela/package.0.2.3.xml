@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.9.4" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0     http://pear.php.net/dtd/tasks-1.0.xsd     http://pear.php.net/dtd/package-2.0     http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Modela</name>
+ <channel>mode.la</channel>
+ <summary>Modela - CouchDB Framework</summary>
+ <description>Modela is a data modeling and access layer for CouchDB.</description>
+ <lead>
+  <name>Josh Butts</name>
+  <user>jimbojsb</user>
+  <email>josh@joshbutts.com</email>
+  <active>yes</active>
+ </lead>
+ <date>2011-08-09</date>
+ <time>18:23:27</time>
+ <version>
+  <release>0.2.3</release>
+  <api>0.2.3</api>
+ </version>
+ <stability>
+  <release>alpha</release>
+  <api>alpha</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+ <notes>
+Update contents for PEAR package
+ </notes>
+ <contents>
+  <dir baseinstalldir="/" name="/">
+   <file baseinstalldir="/" md5sum="1643e78049a7f2c2a3cf743121f40a5d" name="Modela/Cli.php" role="php" />
+   <file baseinstalldir="/" md5sum="1a3a456adc02c3d6685eff1564b14393" name="Modela/Core.php" role="php" />
+   <file baseinstalldir="/" md5sum="a6fd1a22648e0faef4bf25971b37ae28" name="Modela/Doc.php" role="php" />
+   <file baseinstalldir="/" md5sum="5af924f76322ce9c88675e54ffe783de" name="Modela/Exception.php" role="php" />
+   <file baseinstalldir="/" md5sum="44d758dddd0b8a6f71c6482667d30592" name="Modela/Http.php" role="php" />
+   <file baseinstalldir="/" md5sum="320d2e6a632582215f87bd89d0baa8b8" name="Modela/Loader.php" role="php" />
+   <file baseinstalldir="/" md5sum="6e7c846b34a7ed68b782511156779942" name="Modela/Response.php" role="php" />
+   <file baseinstalldir="/" md5sum="b7eb9142e92d5856d7b18a036cf3ee4a" name="Modela/View.php" role="php" />
+   <file baseinstalldir="/" md5sum="084ff32597d902c8ce4ea2361e991058" name="Modela/Doc/Design.php" role="php" />
+   <file baseinstalldir="/" md5sum="861b9b95b670da2bfd350a4b75a45660" name="Modela/View/Php.php" role="php" />
+   <file baseinstalldir="/" md5sum="8dbb690ccae407ebbe23d89cd44585b8" name="Modela/Zend/Application/Resource/Modela.php" role="php" />
+   <file baseinstalldir="/" md5sum="48462513ffd4e53f5b7ea3c29852121b" name="Modela/Zend/Auth/Adapter.php" role="php" />
+   <file baseinstalldir="/" md5sum="9e6d5355b538af3cb7e16f692c1ba253" name="modela.php" role="script" />
+  </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease>
+  <filelist>
+   <install as="modela" name="modela.php" />
+  </filelist>
+ </phprelease>
+ <changelog>
+  <release>
+   <version>
+    <release>0.2.3</release>
+    <api>0.2.3</api>
+   </version>
+   <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+   </stability>
+   <date>2011-07-15</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD Style</license>
+   <notes>
+Update contents for PEAR package
+   </notes>
+  </release>
+ </changelog>
+</package>

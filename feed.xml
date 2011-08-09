@@ -7,6 +7,17 @@
     </author>
 
     <entry>
+        <title>Modela 0.2.3 (alpha)</title>
+        <link href="http://mode.la/get/Modela-0.2.3.tgz" />
+        <id>Modela-0.2.3</id>
+        <author>
+            <name>jimbojsb</name>
+        </author>
+        <updated>2011-08-09T18:23:27-05:00</updated>
+        <content>
+            Modela is a data modeling and access layer for CouchDB.
+        </content>
+    </entry>    <entry>
         <title>Modela 0.2.2 (beta)</title>
         <link href="http://mode.la/get/Modela-0.2.2.tgz" />
         <id>Modela-0.2.2</id>
@@ -15,7 +26,7 @@
         </author>
         <updated>2011-07-11T04:34:33-05:00</updated>
         <content>
-            Modela is an access and modeling framework for CouchDB
+            Modela is a data modeling and access layer for CouchDB.
         </content>
     </entry>
 </feed>

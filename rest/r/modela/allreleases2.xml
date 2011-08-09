@@ -3,6 +3,11 @@
     <p>Modela</p>
     <c>mode.la</c>
     <r>
+        <v>0.2.3</v>
+        <s>alpha</s>
+        <m>5.2</m>
+    </r>
+    <r>
         <v>0.2.2</v>
         <s>beta</s>
         <m>5.2.0</m>
