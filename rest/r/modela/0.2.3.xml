@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<r xmlns="http://pear.php.net/dtd/rest.release" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://pear.php.net/dtd/rest.release http://pear.php.net/dtd/rest.release.xsd">
+    <p xlink:href="/rest/p/modela">Modela</p>
+    <c>mode.la</c>
+    <v>0.2.3</v>
+    <st>alpha</st>
+    <l>BSD Style</l>
+    <m>jimbojsb</m>
+    <s>Modela - CouchDB Framework</s>
+    <d>Modela is a data modeling and access layer for CouchDB.</d>
+    <da>2011-08-09 18:23:27</da>
+    <n>
+Update contents for PEAR package
+ </n>
+    <f>6725</f>
+    <g>http://mode.la/get/Modela-0.2.3</g>
+    <x xlink:href="package.0.2.3.xml"/>
+</r>

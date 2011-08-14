@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<p xmlns="http://pear.php.net/dtd/rest.package" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="http://pear.php.net/dtd/rest.package    http://pear.php.net/dtd/rest.package.xsd">
+<n>Modela</n>
+<c>mode.la</c>
+<ca xlink:href="/rest/c/Default">Default</ca>
+<l>BSD Style</l>
+<s>Modela - CouchDB Framework</s>
+<d>Modela is a data modeling and access layer for CouchDB.</d>
+<r xlink:href="/rest/r/modela" />
+</p>

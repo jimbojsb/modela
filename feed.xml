@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:base="http://mode.la">
+    <title>Modela's PEAR Channel Server Latest Releases</title>
+    <link href="http://mode.la" />
+    <author>
+        <name>http://mode.la</name>
+    </author>
+
+    <entry>
+        <title>Modela 0.2.3 (alpha)</title>
+        <link href="http://mode.la/get/Modela-0.2.3.tgz" />
+        <id>Modela-0.2.3</id>
+        <author>
+            <name>jimbojsb</name>
+        </author>
+        <updated>2011-08-09T18:23:27-05:00</updated>
+        <content>
+            Modela is a data modeling and access layer for CouchDB.
+        </content>
+    </entry>    <entry>
+        <title>Modela 0.2.2 (beta)</title>
+        <link href="http://mode.la/get/Modela-0.2.2.tgz" />
+        <id>Modela-0.2.2</id>
+        <author>
+            <name>jimbojsb</name>
+        </author>
+        <updated>2011-07-11T04:34:33-05:00</updated>
+        <content>
+            Modela is a data modeling and access layer for CouchDB.
+        </content>
+    </entry>
+</feed>

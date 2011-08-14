@@ -1,41 +1,49 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-	<title>Modela - A CouchDB ODM Framework in PHP</title>
-	<link rel="stylesheet" type="text/css" href="styles.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Modela's PEAR Channel Server</title>
+    <link rel="stylesheet" type="text/css" href="http://mode.la/pirum.css" />
+    <link rel="alternate" type="application/rss+xml" href="http://mode.la/feed.xml" title="Modela's PEAR Channel Server Latest Releases" />
 </head>
-
 <body>
-    <div id="container">
-        <img src="modelasite.png" alt="Modela PHP CouchDB Framework"/>
-        <div id="content">
-            <h2>What is Modela?</h2>
-            <p>Modela is an Object-to-Document Mapper for PHP and CouchDB. Modela allows you to build a domain model with PHP objects and persist them as documents in CouchDB.</p>
-            
-            <h2>What features does Modela Have?</h2>
-            <ul>
-                <li>Extremely light-weight HTTP access to CouchDB via raw PHP sockets</li>
-                <li>Extensible document base class for creating models</li>
-                <li>Autoloading of classes that won't conflict with other libraries</li>
-                <li>Robust API for defining and querying map-reduce views</li>
-                <li>Zend Framework application resource plugin</li>
-                <li>Zend Framework authentication adapter</li>
-                <li>Much more</li>
-            </ul>
-            
-            <h2>Where and how do I get it?</h2>
-            <p>Modela is hosted and maintained on GitHub. You can <a href="http://github.com/jimbjsb/Modela">download the latest source version</a> directly from GitHub if you like.</p>
-            <p>
-                The preferred method for getting Modela is to install via PEAR. Our PEAR channel is hosted by PearHub, and you can install it as follows:
-                <pre>
-                
-  # pear channel-discover pearhub.org
-  # pear install pearhub/Modela
-                </pre>
-            </p>
-            
+    <div id="doc" class="yui-t7">
+        <div id="hd">
+            <h1>Modela's PEAR Channel Server</h1>
+        </div>
+        <div id="bd">
+            <div class="yui-g">
+                <h2>Using this Channel</h2>
+                <p>This channel is to be used with the PEAR installer.</p>
+                <em>Registering</em> the channel:
+                <pre><code>pear channel-discover mode.la</code></pre>
+                <em>Listing</em> available packages:
+                <pre><code>pear remote-list -c modela</code></pre>
+                <em>Installing</em> a package:
+                <pre><code>pear install modela/package_name</code></pre>
+                <em>Installing</em> a specific version/stability:
+                <pre><code>pear install modela/package_name-1.0.0
+pear install modela/package_name-beta</code></pre>
+                <em>Receiving</em> updates via a <a href="http://mode.la/feed.xml">feed</a>:
+                <pre><code>http://mode.la/feed.xml</code></pre>
+
+                <h2>Packages</h2>
+
+                                    <h3>Modela<small> - Modela - CouchDB Framework</small></h3>
+                    <p>Modela is a data modeling and access layer for CouchDB.</p>
+                    <ul>
+                        <li><strong>Package name</strong>: Modela</li>
+                        <li><strong>License</strong>: BSD Style</li>
+                                                <li><strong>Maintainers</strong>: Josh Butts (as lead)</li>
+                                                <li><strong>Releases</strong>: <a href="http://mode.la/get/Modela-0.2.3.tgz">0.2.3</a> (alpha), <a href="http://mode.la/get/Modela-0.2.2.tgz">0.2.2</a> (beta)</li>
+                        <li><strong>Install command</strong>: pear install modela/Modela</li>
+                    </ul>
+
+                    <hr />
+                            </div>
+        </div>
+        <div id="ft">
+            <p><small>The <em>mode.la</em> PEAR Channel Server is proudly powered by <a href="http://www.pirum-project.org/">Pirum</a> 1.0.1</small></p>
         </div>
     </div>
 </body>
